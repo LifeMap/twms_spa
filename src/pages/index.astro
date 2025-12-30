@@ -1,0 +1,352 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="TWMS - Tiny Wins Make Success">
+  <header
+    class="twms-header"
+    data-twms-header
+  >
+    <div class="twms-header-inner">
+      <div class="flex items-center gap-3">
+        <a
+          href="/"
+          class="twms-logo-long"
+          data-logo-long
+          aria-label="TWMS - Tiny Wins Make Success"
+        >
+          <span>Tiny Wins Make Success</span>
+        </a>
+        <a
+          href="/"
+          class="twms-logo-short hidden"
+          data-logo-short
+          aria-label="TWMS"
+        >
+          <span>TWMS</span>
+        </a>
+      </div>
+      <nav class="hidden gap-6 text-sm md:flex">
+        <a href="#about" class="hover:opacity-80">About</a>
+        <a href="#features" class="hover:opacity-80">Features</a>
+        <a href="#services" class="hover:opacity-80">Services</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="twms-container">
+    <section id="about" class="space-y-10 p-6 md:p-10">
+      <div class="grid gap-12 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] md:items-center">
+      <div class="space-y-8">
+        <h1 class="twms-tagline text-slate-900">
+          Tiny Wins<br />Make Success
+        </h1>
+        <p class="max-w-xl text-sm leading-relaxed text-slate-700">
+          작은 승리가 쌓여 큰 성공을 만든다는 말을 믿습니다.<br />
+          AI와의 협업으로 작은 성공들을 만들려 합니다.<br />
+          아직은 소소하지만, 방향은 분명합니다.
+        </p>
+      </div>
+
+      <div class="twms-logo-square" aria-label="TWMS - Tiny Wins Make Success">
+        <span>Tiny</span>
+        <span>Wins</span>
+        <span>Make</span>
+        <span>Success</span>
+      </div>
+    </section>
+
+    <section id="features" class="space-y-8 rounded-[1.5rem] bg-twms-surface-muted p-6 md:p-10">
+      <h2 class="font-display text-xl text-slate-900">What you can expect</h2>
+      <div class="grid gap-6 md:grid-cols-3">
+        <div class="twms-pill space-y-3">
+          <h3 class="font-medium">AI 협업</h3>
+          <p class="text-xs text-slate-600">
+            AI를 통해 생산성을 극대화 하려고 노력합니다. 이것이 Key Point 입니다.
+          </p>
+        </div>
+        <div class="twms-pill space-y-3">
+          <h3 class="font-medium">자동화</h3>
+          <p class="text-xs text-slate-600">
+            궁극의 자동화를 지향합니다. 서비스의 자동화는 언제나 중요합니다.
+          </p>
+        </div>
+        <div class="twms-pill space-y-3">
+          <h3 class="font-medium">작은 성공</h3>
+          <p class="text-xs text-slate-600">
+            거창한 목표보다 소소한 성공을 쌓아갑니다. 작은 승리가 모여 큰 변화를 만듭니다.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="services" class="space-y-8">
+      <h2 class="font-display text-xl text-slate-900">Services</h2>
+      <div class="twms-carousel" data-carousel>
+        <div class="twms-carousel-track" data-carousel-track>
+          <div class="twms-service-card">
+            <div class="twms-service-card-logo">
+              <img src="/sns_automation_logo.png" alt="SNS 자동화" draggable="false" />
+            </div>
+            <div class="twms-service-card-content">
+              <div class="flex items-center justify-between">
+                <h3 class="font-medium">SNS 자동화</h3>
+                <span class="twms-badge twms-badge-review">검수중</span>
+              </div>
+              <p class="text-xs text-slate-600">
+                인스타그램의 특정 게시물에 특정 코멘트를 작성하면 자동으로 DM을 발송합니다.
+              </p>
+              <a href="https://sns.twms.in" target="_blank" rel="noopener noreferrer" class="twms-service-btn">
+                바로가기
+              </a>
+            </div>
+          </div>
+          <div class="twms-service-card">
+            <div class="twms-service-card-logo">
+              <div class="twms-service-card-logo-placeholder">
+                <span>?</span>
+              </div>
+            </div>
+            <div class="twms-service-card-content">
+              <div class="flex items-center justify-between">
+                <h3 class="font-medium">Habit Builder</h3>
+                <span class="twms-badge twms-badge-planned">예정</span>
+              </div>
+              <p class="text-xs text-slate-600">
+                21일 습관 형성 프로그램. 작은 행동을 반복하여 습관을 만듭니다.
+              </p>
+              <span class="twms-service-btn twms-service-btn-disabled">
+                준비 중
+              </span>
+            </div>
+          </div>
+          <div class="twms-service-card">
+            <div class="twms-service-card-logo">
+              <div class="twms-service-card-logo-placeholder">
+                <span>?</span>
+              </div>
+            </div>
+            <div class="twms-service-card-content">
+              <div class="flex items-center justify-between">
+                <h3 class="font-medium">Progress Dashboard</h3>
+                <span class="twms-badge twms-badge-planned">예정</span>
+              </div>
+              <p class="text-xs text-slate-600">
+                주간/월간 진행 상황을 한눈에 파악하는 대시보드입니다.
+              </p>
+              <span class="twms-service-btn twms-service-btn-disabled">
+                준비 중
+              </span>
+            </div>
+          </div>
+          <div class="twms-service-card">
+            <div class="twms-service-card-logo">
+              <div class="twms-service-card-logo-placeholder">
+                <span>?</span>
+              </div>
+            </div>
+            <div class="twms-service-card-content">
+              <div class="flex items-center justify-between">
+                <h3 class="font-medium">Reflection Journal</h3>
+                <span class="twms-badge twms-badge-planned">예정</span>
+              </div>
+              <p class="text-xs text-slate-600">
+                하루를 돌아보는 회고 일지. 내일을 위한 기록입니다.
+              </p>
+              <span class="twms-service-btn twms-service-btn-disabled">
+                준비 중
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="mt-8 flex flex-col gap-3 border-t border-twms-border-subtle pt-6 text-xs text-slate-500 md:flex-row md:items-center md:justify-between">
+      <p class="font-display tracking-[0.25em] text-slate-800">TWMS</p>
+      <p>© {new Date().getFullYear()} Tiny Wins Make Success. All rights reserved.</p>
+    </footer>
+  </main>
+
+  <script is:inline>
+    if (typeof window !== "undefined") {
+      const header = document.querySelector("[data-twms-header]");
+      const longLogo = header?.querySelector("[data-logo-long]");
+      const shortLogo = header?.querySelector("[data-logo-short]");
+
+      const onScroll = () => {
+        if (!header || !longLogo || !shortLogo) return;
+        const scrolled = window.scrollY > 40;
+        header.classList.toggle("is-scrolled", scrolled);
+
+        if (scrolled) {
+          longLogo.classList.add("hidden");
+          shortLogo.classList.remove("hidden");
+        } else {
+          longLogo.classList.remove("hidden");
+          shortLogo.classList.add("hidden");
+        }
+      };
+
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+
+      // Center-focused carousel with drag support
+      const carousel = document.querySelector("[data-carousel]");
+      const track = document.querySelector("[data-carousel-track]");
+      if (carousel && track) {
+        const cards = Array.from(track.querySelectorAll(".twms-service-card"));
+        const cardCount = cards.length;
+
+        const getGap = () => window.innerWidth >= 768 ? 24 : 8; // md:gap-6 : gap-2
+        const getCardWidth = () => {
+          const card = track.querySelector(".twms-service-card");
+          return card ? card.offsetWidth + getGap() : 280;
+        };
+        let cardWidth = getCardWidth();
+
+        // Clone cards for infinite loop (prepend and append)
+        cards.forEach(card => {
+          const cloneEnd = card.cloneNode(true);
+          track.appendChild(cloneEnd);
+        });
+        cards.reverse().forEach(card => {
+          const cloneStart = card.cloneNode(true);
+          track.prepend(cloneStart);
+        });
+
+        const allCards = track.querySelectorAll(".twms-service-card");
+        let currentIndex = cardCount; // Start at first original card
+        let isTransitioning = false;
+
+        const normalizeIndex = (index) => {
+          // Keep index within the original cards range for display purposes
+          return ((index - cardCount) % cardCount + cardCount) % cardCount;
+        };
+
+        const updateActiveCards = () => {
+          const normalizedCurrent = normalizeIndex(currentIndex);
+          allCards.forEach((card, i) => {
+            const normalizedI = normalizeIndex(i);
+            card.classList.remove("is-active", "is-adjacent");
+
+            if (normalizedI === normalizedCurrent) {
+              card.classList.add("is-active");
+            } else if (
+              normalizedI === (normalizedCurrent - 1 + cardCount) % cardCount ||
+              normalizedI === (normalizedCurrent + 1) % cardCount
+            ) {
+              card.classList.add("is-adjacent");
+            }
+          });
+        };
+
+        const getOffset = () => {
+          const carouselWidth = carousel.offsetWidth;
+          const actualCardWidth = cardWidth - getGap(); // card width without gap
+          const centerOffset = (carouselWidth - actualCardWidth) / 2;
+          return currentIndex * cardWidth - centerOffset;
+        };
+
+        const scrollToIndex = (index, smooth = true) => {
+          currentIndex = index;
+          isTransitioning = smooth;
+          track.style.transition = smooth ? "transform 0.5s ease-in-out" : "none";
+          track.style.transform = `translateX(-${getOffset()}px)`;
+          updateActiveCards();
+        };
+
+        // Reset position when reaching cloned cards
+        track.addEventListener("transitionend", () => {
+          isTransitioning = false;
+          if (currentIndex >= cardCount * 2) {
+            currentIndex = currentIndex - cardCount;
+            track.style.transition = "none";
+            track.style.transform = `translateX(-${getOffset()}px)`;
+          } else if (currentIndex < cardCount) {
+            currentIndex = currentIndex + cardCount;
+            track.style.transition = "none";
+            track.style.transform = `translateX(-${getOffset()}px)`;
+          }
+        });
+
+        const nextSlide = () => {
+          if (isTransitioning) return;
+          scrollToIndex(currentIndex + 1);
+        };
+
+        const prevSlide = () => {
+          if (isTransitioning) return;
+          scrollToIndex(currentIndex - 1);
+        };
+
+        // Drag/Swipe support
+        let isDragging = false;
+        let startX = 0;
+        let startOffset = 0;
+
+        const getPositionX = (e) => {
+          return e.type.includes("mouse") ? e.pageX : e.touches[0].clientX;
+        };
+
+        const dragStart = (e) => {
+          if (isTransitioning) return;
+          isDragging = true;
+          startX = getPositionX(e);
+          startOffset = getOffset();
+          track.style.transition = "none";
+        };
+
+        const drag = (e) => {
+          if (!isDragging) return;
+          const currentX = getPositionX(e);
+          const diff = startX - currentX;
+          track.style.transform = `translateX(-${startOffset + diff}px)`;
+        };
+
+        const dragEnd = (e) => {
+          if (!isDragging) return;
+          isDragging = false;
+          const endX = e.type.includes("mouse") ? e.pageX : e.changedTouches[0].clientX;
+          const diff = startX - endX;
+
+          if (Math.abs(diff) > 50) {
+            if (diff > 0) {
+              nextSlide();
+            } else {
+              prevSlide();
+            }
+          } else {
+            scrollToIndex(currentIndex);
+          }
+        };
+
+        // Mouse events
+        carousel.addEventListener("mousedown", dragStart);
+        carousel.addEventListener("mousemove", drag);
+        carousel.addEventListener("mouseup", dragEnd);
+        carousel.addEventListener("mouseleave", (e) => {
+          if (isDragging) dragEnd(e);
+        });
+
+        // Touch events
+        carousel.addEventListener("touchstart", dragStart, { passive: true });
+        carousel.addEventListener("touchmove", drag, { passive: true });
+        carousel.addEventListener("touchend", dragEnd);
+
+        // Prevent drag on links/images
+        carousel.addEventListener("dragstart", (e) => e.preventDefault());
+
+        // Initialize
+        scrollToIndex(currentIndex, false);
+
+        // Recalculate on resize
+        window.addEventListener("resize", () => {
+          cardWidth = getCardWidth();
+          scrollToIndex(currentIndex, false);
+        });
+      }
+    }
+  </script>
+</BaseLayout>
+
