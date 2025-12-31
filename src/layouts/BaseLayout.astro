@@ -22,6 +22,15 @@ const { title = "TWMS" } = Astro.props as Props;
     <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-icon-180x180.png" />
     <link rel="manifest" href="/favicons/manifest.json" />
 
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LM605LPQZT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-LM605LPQZT');
+    </script>
+
     <!-- Google Fonts: Audiowide (English) + Noto Sans KR (Korean) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
