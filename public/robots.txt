@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://twms.in/sitemap-index.xml
+Sitemap: https://www.twms.in/sitemap-index.xml
