@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "title": "TWMS - Tiny Wins Make Success",
+    "lang": "ja"
+  },
+  "nav": {
+    "about": "紹介",
+    "features": "特徴",
+    "services": "サービス"
+  },
+  "hero": {
+    "description": "小さな勝利が積み重なって大きな成功を作ると信じています。<br />AIとの協力で小さな成功を作ろうとしています。<br />まだ小さいですが、方向は明確です。"
+  },
+  "features": {
+    "title": "What you can expect",
+    "ai": {
+      "title": "AIコラボレーション",
+      "description": "AIを通じて生産性を最大化しようと努力しています。これがキーポイントです。"
+    },
+    "automation": {
+      "title": "自動化",
+      "description": "究極の自動化を目指しています。サービスの自動化は常に重要です。"
+    },
+    "smallWins": {
+      "title": "小さな成功",
+      "description": "壮大な目標より小さな成功を積み重ねます。小さな勝利が大きな変化を作ります。"
+    }
+  },
+  "services": {
+    "title": "Services",
+    "badges": {
+      "review": "審査中",
+      "planned": "予定"
+    },
+    "autogram": {
+      "title": "Autogram",
+      "description": "Instagramのコメントを自動DMに変換するマーケティング自動化ツール",
+      "cta": "詳細"
+    },
+    "marketing": {
+      "title": "マーケティングプラットフォーム",
+      "description": "新しい方式のマーケティングプラットフォームを実装します。",
+      "cta": "準備中"
+    },
+    "angry": {
+      "title": "怒った人々",
+      "description": "怒った人々のコミュニティを作ります。",
+      "cta": "準備中"
+    },
+    "admin": {
+      "title": "TWMS統合アドミン",
+      "description": "TWMSの複数のサービスを一つのアドミンで管理します。",
+      "cta": "準備中"
+    }
+  },
+  "footer": {
+    "copyright": "© {year} Tiny Wins Make Success. All rights reserved."
+  }
+}

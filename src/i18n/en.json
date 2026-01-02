@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "title": "TWMS - Tiny Wins Make Success",
+    "lang": "en"
+  },
+  "nav": {
+    "about": "About",
+    "features": "Features",
+    "services": "Services"
+  },
+  "hero": {
+    "description": "We believe that small wins add up to great success.<br />We aim to create small victories through AI collaboration.<br />Still modest, but the direction is clear."
+  },
+  "features": {
+    "title": "What you can expect",
+    "ai": {
+      "title": "AI Collaboration",
+      "description": "We strive to maximize productivity through AI. This is our key point."
+    },
+    "automation": {
+      "title": "Automation",
+      "description": "We pursue ultimate automation. Service automation is always important."
+    },
+    "smallWins": {
+      "title": "Small Wins",
+      "description": "We accumulate small successes rather than grand goals. Small victories create big changes."
+    }
+  },
+  "services": {
+    "title": "Services",
+    "badges": {
+      "review": "In Review",
+      "planned": "Planned"
+    },
+    "autogram": {
+      "title": "Autogram",
+      "description": "Marketing automation tool that converts Instagram comments to automatic DMs",
+      "cta": "Visit"
+    },
+    "marketing": {
+      "title": "Marketing Platform",
+      "description": "Implementing a new way of marketing platform.",
+      "cta": "Coming Soon"
+    },
+    "angry": {
+      "title": "Angry People",
+      "description": "Building a community for angry people.",
+      "cta": "Coming Soon"
+    },
+    "admin": {
+      "title": "TWMS Admin",
+      "description": "Manage multiple TWMS services in one admin panel.",
+      "cta": "Coming Soon"
+    }
+  },
+  "footer": {
+    "copyright": "© {year} Tiny Wins Make Success. All rights reserved."
+  }
+}

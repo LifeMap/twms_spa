@@ -1,14 +1,16 @@
 ---
 import "../styles/global.css";
+import type { Lang } from "../i18n";
 
 interface Props {
   title?: string;
+  lang?: Lang;
 }
 
-const { title = "TWMS" } = Astro.props as Props;
+const { title = "TWMS", lang = "ko" } = Astro.props as Props;
 ---
 
-<html lang="ko">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />

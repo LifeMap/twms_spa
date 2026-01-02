@@ -1,0 +1,389 @@
+---
+import type { Lang } from "../i18n";
+import { useTranslations, languages, getLocalizedPath } from "../i18n";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const currentYear = 2025;
+---
+
+<header class="twms-header" data-twms-header>
+  <div class="twms-header-inner">
+    <div class="flex items-center gap-3">
+      <a
+        href={getLocalizedPath("/", lang)}
+        class="twms-logo-long"
+        data-logo-long
+        aria-label="TWMS - Tiny Wins Make Success"
+      >
+        <span>Tiny Wins Make Success</span>
+      </a>
+      <a
+        href={getLocalizedPath("/", lang)}
+        class="twms-logo-short hidden"
+        data-logo-short
+        aria-label="TWMS"
+      >
+        <span>TWMS</span>
+      </a>
+    </div>
+    <div class="flex items-center gap-6">
+      <nav class="hidden gap-6 text-sm md:flex">
+        <a href="#about" class="hover:opacity-80">{t.nav.about}</a>
+        <a href="#features" class="hover:opacity-80">{t.nav.features}</a>
+        <a href="#services" class="hover:opacity-80">{t.nav.services}</a>
+      </nav>
+      <!-- Language switcher icon -->
+      <div class="relative" data-lang-switcher>
+      <button
+        class="flex items-center justify-center rounded-full p-2 hover:bg-slate-100 transition-colors"
+        data-lang-btn
+        aria-label="Select language"
+      >
+        <svg class="h-5 w-5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+        </svg>
+      </button>
+      <div
+        class="absolute right-0 top-full mt-2 hidden min-w-[120px] rounded-lg bg-white py-2 shadow-lg ring-1 ring-slate-200 z-50"
+        data-lang-menu
+      >
+        <a href="/" class={`block px-4 py-2 text-sm hover:bg-slate-100 ${lang === 'ko' ? 'font-medium text-slate-900' : 'text-slate-600'}`}>
+          한국어
+        </a>
+        <a href="/en/" class={`block px-4 py-2 text-sm hover:bg-slate-100 ${lang === 'en' ? 'font-medium text-slate-900' : 'text-slate-600'}`}>
+          English
+        </a>
+        <a href="/ja/" class={`block px-4 py-2 text-sm hover:bg-slate-100 ${lang === 'ja' ? 'font-medium text-slate-900' : 'text-slate-600'}`}>
+          日本語
+        </a>
+      </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="twms-container">
+  <section id="about" class="space-y-10 p-6 md:p-10">
+    <div class="grid gap-12 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] md:items-center">
+      <div class="space-y-8">
+        <h1 class="twms-tagline text-slate-900">
+          Tiny Wins<br />Make Success
+        </h1>
+        <p class="max-w-xl text-sm leading-relaxed text-slate-700" set:html={t.hero.description} />
+      </div>
+
+      <div class="twms-logo-square" aria-label="TWMS - Tiny Wins Make Success">
+        <span>Tiny</span>
+        <span>Wins</span>
+        <span>Make</span>
+        <span>Success</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" class="space-y-8 rounded-[1.5rem] bg-twms-surface-muted p-6 md:p-10">
+    <h2 class="font-display text-xl text-slate-900">{t.features.title}</h2>
+    <div class="grid gap-6 md:grid-cols-3">
+      <div class="twms-pill space-y-3">
+        <h3 class="font-medium">{t.features.ai.title}</h3>
+        <p class="text-xs text-slate-600">{t.features.ai.description}</p>
+      </div>
+      <div class="twms-pill space-y-3">
+        <h3 class="font-medium">{t.features.automation.title}</h3>
+        <p class="text-xs text-slate-600">{t.features.automation.description}</p>
+      </div>
+      <div class="twms-pill space-y-3">
+        <h3 class="font-medium">{t.features.smallWins.title}</h3>
+        <p class="text-xs text-slate-600">{t.features.smallWins.description}</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="space-y-8">
+    <h2 class="font-display text-xl text-slate-900">{t.services.title}</h2>
+    <div class="twms-carousel" data-carousel>
+      <div class="twms-carousel-track" data-carousel-track>
+        <div class="twms-service-card">
+          <div class="twms-service-card-logo">
+            <img src="/sns_automation_logo.png" alt="SNS Automation" draggable="false" />
+          </div>
+          <div class="twms-service-card-content">
+            <div class="flex items-center justify-between">
+              <h3 class="font-medium">{t.services.autogram.title}</h3>
+              <span class="twms-badge twms-badge-review">{t.services.badges.review}</span>
+            </div>
+            <p class="text-xs text-slate-600">{t.services.autogram.description}</p>
+            <a href="https://sns.twms.in" target="_blank" rel="noopener noreferrer" class="twms-service-btn">
+              {t.services.autogram.cta}
+            </a>
+          </div>
+        </div>
+        <div class="twms-service-card">
+          <div class="twms-service-card-logo">
+            <div class="twms-service-card-logo-placeholder">
+              <span>?</span>
+            </div>
+          </div>
+          <div class="twms-service-card-content">
+            <div class="flex items-center justify-between">
+              <h3 class="font-medium">{t.services.marketing.title}</h3>
+              <span class="twms-badge twms-badge-planned">{t.services.badges.planned}</span>
+            </div>
+            <p class="text-xs text-slate-600">{t.services.marketing.description}</p>
+            <span class="twms-service-btn twms-service-btn-disabled">{t.services.marketing.cta}</span>
+          </div>
+        </div>
+        <div class="twms-service-card">
+          <div class="twms-service-card-logo">
+            <div class="twms-service-card-logo-placeholder">
+              <span>?</span>
+            </div>
+          </div>
+          <div class="twms-service-card-content">
+            <div class="flex items-center justify-between">
+              <h3 class="font-medium">{t.services.angry.title}</h3>
+              <span class="twms-badge twms-badge-planned">{t.services.badges.planned}</span>
+            </div>
+            <p class="text-xs text-slate-600">{t.services.angry.description}</p>
+            <span class="twms-service-btn twms-service-btn-disabled">{t.services.angry.cta}</span>
+          </div>
+        </div>
+        <div class="twms-service-card">
+          <div class="twms-service-card-logo">
+            <div class="twms-service-card-logo-placeholder">
+              <span>?</span>
+            </div>
+          </div>
+          <div class="twms-service-card-content">
+            <div class="flex items-center justify-between">
+              <h3 class="font-medium">{t.services.admin.title}</h3>
+              <span class="twms-badge twms-badge-planned">{t.services.badges.planned}</span>
+            </div>
+            <p class="text-xs text-slate-600">{t.services.admin.description}</p>
+            <span class="twms-service-btn twms-service-btn-disabled">{t.services.admin.cta}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="mt-8 flex flex-col gap-3 border-t border-twms-border-subtle pt-6 text-xs text-slate-500 md:flex-row md:items-center md:justify-between">
+    <div class="flex items-center gap-3">
+      <p class="font-display tracking-[0.25em] text-slate-800">TWMS</p>
+      <a href="https://lifemap.github.io/" target="_blank" rel="noopener noreferrer" aria-label="GitHub Blog" class="text-slate-500 hover:text-slate-700 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+        </svg>
+      </a>
+    </div>
+    <p>{t.footer.copyright.replace('{year}', String(currentYear))}</p>
+  </footer>
+</main>
+
+<script is:inline>
+  if (typeof window !== "undefined") {
+    const header = document.querySelector("[data-twms-header]");
+    const longLogo = header?.querySelector("[data-logo-long]");
+    const shortLogo = header?.querySelector("[data-logo-short]");
+
+    const onScroll = () => {
+      if (!header || !longLogo || !shortLogo) return;
+      const scrolled = window.scrollY > 40;
+      header.classList.toggle("is-scrolled", scrolled);
+
+      if (scrolled) {
+        longLogo.classList.add("hidden");
+        shortLogo.classList.remove("hidden");
+      } else {
+        longLogo.classList.remove("hidden");
+        shortLogo.classList.add("hidden");
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    // Language switcher toggle
+    const langBtn = document.querySelector("[data-lang-btn]");
+    const langMenu = document.querySelector("[data-lang-menu]");
+    if (langBtn && langMenu) {
+      langBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        langMenu.classList.toggle("hidden");
+      });
+    }
+
+    // Close language menu on outside click
+    document.addEventListener("click", () => {
+      langMenu?.classList.add("hidden");
+    });
+
+    // Center-focused carousel with drag support
+    const carousel = document.querySelector("[data-carousel]");
+    const track = document.querySelector("[data-carousel-track]");
+    if (carousel && track) {
+      const cards = Array.from(track.querySelectorAll(".twms-service-card"));
+      const cardCount = cards.length;
+
+      const getGap = () => window.innerWidth >= 768 ? 24 : 8;
+      const getCardWidth = () => {
+        const card = track.querySelector(".twms-service-card");
+        return card ? card.offsetWidth + getGap() : 280;
+      };
+      let cardWidth = getCardWidth();
+
+      cards.forEach(card => {
+        const cloneEnd = card.cloneNode(true);
+        track.appendChild(cloneEnd);
+      });
+      cards.reverse().forEach(card => {
+        const cloneStart = card.cloneNode(true);
+        track.prepend(cloneStart);
+      });
+
+      const allCards = track.querySelectorAll(".twms-service-card");
+      let currentIndex = cardCount;
+      let isTransitioning = false;
+
+      const normalizeIndex = (index) => {
+        return ((index - cardCount) % cardCount + cardCount) % cardCount;
+      };
+
+      const updateActiveCards = () => {
+        const normalizedCurrent = normalizeIndex(currentIndex);
+        allCards.forEach((card, i) => {
+          const normalizedI = normalizeIndex(i);
+          card.classList.remove("is-active", "is-adjacent");
+
+          if (normalizedI === normalizedCurrent) {
+            card.classList.add("is-active");
+          } else if (
+            normalizedI === (normalizedCurrent - 1 + cardCount) % cardCount ||
+            normalizedI === (normalizedCurrent + 1) % cardCount
+          ) {
+            card.classList.add("is-adjacent");
+          }
+        });
+      };
+
+      const getOffset = () => {
+        const carouselWidth = carousel.offsetWidth;
+        const actualCardWidth = cardWidth - getGap();
+        const centerOffset = (carouselWidth - actualCardWidth) / 2;
+        return currentIndex * cardWidth - centerOffset;
+      };
+
+      const scrollToIndex = (index, smooth = true) => {
+        currentIndex = index;
+        isTransitioning = smooth;
+        track.style.transition = smooth ? "transform 0.5s ease-in-out" : "none";
+        track.style.transform = `translateX(-${getOffset()}px)`;
+        updateActiveCards();
+      };
+
+      track.addEventListener("transitionend", () => {
+        isTransitioning = false;
+        if (currentIndex >= cardCount * 2) {
+          currentIndex = currentIndex - cardCount;
+          track.style.transition = "none";
+          track.style.transform = `translateX(-${getOffset()}px)`;
+        } else if (currentIndex < cardCount) {
+          currentIndex = currentIndex + cardCount;
+          track.style.transition = "none";
+          track.style.transform = `translateX(-${getOffset()}px)`;
+        }
+      });
+
+      const nextSlide = () => {
+        if (isTransitioning) return;
+        scrollToIndex(currentIndex + 1);
+      };
+
+      const prevSlide = () => {
+        if (isTransitioning) return;
+        scrollToIndex(currentIndex - 1);
+      };
+
+      let isDragging = false;
+      let startX = 0;
+      let startOffset = 0;
+
+      const getPositionX = (e) => {
+        return e.type.includes("mouse") ? e.pageX : e.touches[0].clientX;
+      };
+
+      const dragStart = (e) => {
+        if (isTransitioning) return;
+        isDragging = true;
+        startX = getPositionX(e);
+        startOffset = getOffset();
+        track.style.transition = "none";
+      };
+
+      const drag = (e) => {
+        if (!isDragging) return;
+        const currentX = getPositionX(e);
+        const diff = startX - currentX;
+        track.style.transform = `translateX(-${startOffset + diff}px)`;
+      };
+
+      const dragEnd = (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        const endX = e.type.includes("mouse") ? e.pageX : e.changedTouches[0].clientX;
+        const diff = startX - endX;
+
+        if (Math.abs(diff) > 50) {
+          if (diff > 0) {
+            nextSlide();
+          } else {
+            prevSlide();
+          }
+        } else {
+          scrollToIndex(currentIndex);
+        }
+      };
+
+      carousel.addEventListener("mousedown", dragStart);
+      carousel.addEventListener("mousemove", drag);
+      carousel.addEventListener("mouseup", dragEnd);
+      carousel.addEventListener("mouseleave", (e) => {
+        if (isDragging) dragEnd(e);
+      });
+
+      carousel.addEventListener("touchstart", dragStart, { passive: true });
+      carousel.addEventListener("touchmove", drag, { passive: true });
+      carousel.addEventListener("touchend", dragEnd);
+
+      carousel.addEventListener("dragstart", (e) => e.preventDefault());
+
+      let clickStartX = 0;
+      carousel.addEventListener("mousedown", (e) => {
+        clickStartX = e.pageX;
+      });
+      carousel.addEventListener("click", (e) => {
+        if (Math.abs(e.pageX - clickStartX) > 10) return;
+
+        const card = e.target.closest(".twms-service-card");
+        if (!card) return;
+
+        const cardIndex = Array.from(allCards).indexOf(card);
+        if (cardIndex !== -1 && cardIndex !== currentIndex) {
+          scrollToIndex(cardIndex);
+        }
+      });
+
+      scrollToIndex(currentIndex, false);
+
+      window.addEventListener("resize", () => {
+        cardWidth = getCardWidth();
+        scrollToIndex(currentIndex, false);
+      });
+    }
+  }
+</script>
