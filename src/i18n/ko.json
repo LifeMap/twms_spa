@@ -29,7 +29,7 @@
   "services": {
     "title": "Services",
     "badges": {
-      "review": "검수중",
+      "beta": "베타",
       "planned": "예정"
     },
     "autogram": {

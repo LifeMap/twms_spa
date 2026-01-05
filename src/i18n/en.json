@@ -29,7 +29,7 @@
   "services": {
     "title": "Services",
     "badges": {
-      "review": "In Review",
+      "beta": "Beta",
       "planned": "Planned"
     },
     "autogram": {
