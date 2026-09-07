@@ -62,6 +62,27 @@
     @apply font-display text-3xl leading-tight md:text-5xl;
   }
 
+  .twms-primary-cta,
+  .twms-secondary-cta {
+    @apply inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-medium no-underline transition-all duration-200;
+  }
+
+  .twms-primary-cta {
+    @apply bg-twms-deep-green text-white;
+  }
+
+  .twms-primary-cta:hover {
+    @apply bg-twms-deep-green-elevated shadow-md;
+  }
+
+  .twms-secondary-cta {
+    @apply border border-twms-deep-green/20 bg-white text-twms-deep-green;
+  }
+
+  .twms-secondary-cta:hover {
+    @apply border-twms-deep-green/40 bg-twms-accent;
+  }
+
   /* HTML Logo - Long version */
   .twms-logo-long {
     @apply inline-flex items-center justify-center no-underline;

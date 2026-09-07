@@ -5,8 +5,20 @@ import { useTranslations } from "../../i18n";
 
 const lang = "ja";
 const t = useTranslations(lang);
+const alternates = [
+  { lang: "ko", href: "/" },
+  { lang: "en", href: "/en/" },
+  { lang: "ja", href: "/ja/" },
+  { lang: "x-default", href: "/" },
+];
 ---
 
-<BaseLayout title={t.meta.title} lang={lang}>
+<BaseLayout
+  title={t.meta.title}
+  description={t.meta.description}
+  lang={lang}
+  canonical="/ja/"
+  alternates={alternates}
+>
   <HomePage lang={lang} />
 </BaseLayout>

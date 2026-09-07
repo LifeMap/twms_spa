@@ -1,15 +1,19 @@
 {
   "meta": {
-    "title": "TWMS - Tiny Wins Make Success",
+    "title": "TWMS | Building AI Automation Products",
+    "description": "TWMS builds practical AI automation products, including Autogram, which turns Instagram comments into automatic direct messages.",
     "lang": "en"
   },
   "nav": {
     "about": "About",
     "features": "Features",
-    "services": "Services"
+    "services": "Services",
+    "blog": "Blog"
   },
   "hero": {
-    "description": "We believe that small wins add up to great success.<br />We aim to create small victories through AI collaboration.<br />Still modest, but the direction is clear."
+    "description": "We believe that small wins add up to great success.<br />We aim to create small victories through AI collaboration.<br />Still modest, but the direction is clear.",
+    "autogramCta": "Start Autogram for free",
+    "blogCta": "Read our AI automation blog"
   },
   "features": {
     "title": "What you can expect",

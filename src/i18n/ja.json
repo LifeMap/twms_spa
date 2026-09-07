@@ -1,15 +1,19 @@
 {
   "meta": {
-    "title": "TWMS - Tiny Wins Make Success",
+    "title": "TWMS | AI自動化サービスをつくるチーム",
+    "description": "TWMSはAIとの協働と自動化で小さな成功を生み出すチームです。Instagramのコメントを自動DMに変えるAutogramを提供しています。",
     "lang": "ja"
   },
   "nav": {
     "about": "紹介",
     "features": "特徴",
-    "services": "サービス"
+    "services": "サービス",
+    "blog": "ブログ"
   },
   "hero": {
-    "description": "小さな勝利が積み重なって大きな成功を作ると信じています。<br />AIとの協力で小さな成功を作ろうとしています。<br />まだ小さいですが、方向は明確です。"
+    "description": "小さな勝利が積み重なって大きな成功を作ると信じています。<br />AIとの協力で小さな成功を作ろうとしています。<br />まだ小さいですが、方向は明確です。",
+    "autogramCta": "Autogramを無料で始める",
+    "blogCta": "AI自動化ブログを見る"
   },
   "features": {
     "title": "What you can expect",

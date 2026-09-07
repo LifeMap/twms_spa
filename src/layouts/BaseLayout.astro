@@ -2,12 +2,57 @@
 import "../styles/global.css";
 import type { Lang } from "../i18n";
 
-interface Props {
-  title?: string;
-  lang?: Lang;
+interface AlternateUrl {
+  lang: string;
+  href: string;
 }
 
-const { title = "TWMS", lang = "ko" } = Astro.props as Props;
+interface Props {
+  title?: string;
+  description?: string;
+  lang?: Lang;
+  canonical?: string;
+  alternates?: AlternateUrl[];
+}
+
+const {
+  title = "TWMS",
+  description = "TWMS는 AI 협업과 자동화로 작은 성공을 만드는 팀입니다.",
+  lang = "ko",
+  canonical = Astro.url.pathname,
+  alternates = [],
+} = Astro.props as Props;
+
+const siteUrl = Astro.site ?? new URL("https://www.twms.in");
+const canonicalUrl = new URL(canonical, siteUrl).toString();
+const socialImageUrl = new URL("/twms_logo_square.png", siteUrl).toString();
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": new URL("/#organization", siteUrl).toString(),
+      name: "TWMS",
+      alternateName: "Tiny Wins Make Success",
+      url: new URL("/", siteUrl).toString(),
+      logo: socialImageUrl,
+      email: "info@twms.in",
+      sameAs: [
+        "https://blog.twms.in/",
+        "https://www.instagram.com/autogram.official/",
+      ],
+    },
+    {
+      "@type": "WebSite",
+      "@id": new URL("/#website", siteUrl).toString(),
+      name: "TWMS",
+      alternateName: "Tiny Wins Make Success",
+      url: new URL("/", siteUrl).toString(),
+      publisher: { "@id": new URL("/#organization", siteUrl).toString() },
+      inLanguage: ["ko", "en", "ja"],
+    },
+  ],
+};
 ---
 
 <html lang={lang}>
@@ -16,6 +61,26 @@ const { title = "TWMS", lang = "ko" } = Astro.props as Props;
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    {alternates.map(({ lang: alternateLang, href }) => (
+      <link rel="alternate" hreflang={alternateLang} href={new URL(href, siteUrl).toString()} />
+    ))}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="TWMS" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={socialImageUrl} />
+    <meta property="og:locale" content={lang === "ko" ? "ko_KR" : lang === "ja" ? "ja_JP" : "en_US"} />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageUrl} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
     <!-- Favicons -->
     <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico" />
@@ -26,11 +91,11 @@ const { title = "TWMS", lang = "ko" } = Astro.props as Props;
 
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-LM605LPQZT"></script>
-    <script>
+    <script is:inline>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-LM605LPQZT');
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      window.gtag('js', new Date());
+      window.gtag('config', 'G-LM605LPQZT');
     </script>
 
     <!-- Google AdSense -->

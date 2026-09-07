@@ -1,15 +1,19 @@
 {
   "meta": {
-    "title": "TWMS - Tiny Wins Make Success",
+    "title": "TWMS | AI 자동화 서비스를 만드는 팀",
+    "description": "TWMS는 AI 협업과 자동화로 작은 성공을 만드는 팀입니다. 인스타그램 댓글을 자동 DM으로 전환하는 Autogram을 만나보세요.",
     "lang": "ko"
   },
   "nav": {
     "about": "소개",
     "features": "특징",
-    "services": "서비스"
+    "services": "서비스",
+    "blog": "블로그"
   },
   "hero": {
-    "description": "작은 승리가 쌓여 큰 성공을 만든다는 말을 믿습니다.<br />AI와의 협업으로 작은 성공들을 만들려 합니다.<br />아직은 소소하지만, 방향은 분명합니다."
+    "description": "작은 승리가 쌓여 큰 성공을 만든다는 말을 믿습니다.<br />AI와의 협업으로 작은 성공들을 만들려 합니다.<br />아직은 소소하지만, 방향은 분명합니다.",
+    "autogramCta": "Autogram 무료로 시작하기",
+    "blogCta": "AI 자동화 블로그 보기"
   },
   "features": {
     "title": "What you can expect",
