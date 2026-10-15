@@ -1,3 +1,5 @@
+import { calculateStageLayout } from './stage-layout.js';
+
 (() => {
  'use strict';
  const bpm = 160, tempoRatio = bpm / 150, beat = 60 / bpm;
@@ -28,8 +30,21 @@
  const stripBars = [...strip.children];
  const ease = value => 1 - Math.pow(1 - Math.max(0, Math.min(1, value)), 4);
  const stars = Array.from({ length: 170 }, (_, i) => ({ angle: i * 2.39996, radius: 110 + (i * 71 % 670), size: 2 + i % 6, speed: .08 + (i % 7) * .025 }));
- const resize = () => { const scale = Math.min(innerWidth / 1600, innerHeight / 900); stage.style.transform = `scale(${scale})`; };
- addEventListener('resize', resize); resize();
+ const resize = () => {
+  const viewport = window.visualViewport;
+  const layout = calculateStageLayout(viewport?.width ?? innerWidth, viewport?.height ?? innerHeight, viewport?.offsetLeft ?? 0, viewport?.offsetTop ?? 0);
+  if (!layout) return;
+  stage.style.left = `${layout.left}px`;
+  stage.style.top = `${layout.top}px`;
+  stage.style.transform = `scale(${layout.scale})`;
+ };
+ addEventListener('resize', resize);
+ addEventListener('orientationchange', () => requestAnimationFrame(resize));
+ addEventListener('pageshow', resize);
+ window.visualViewport?.addEventListener('resize', resize);
+ window.visualViewport?.addEventListener('scroll', resize);
+ resize();
+ requestAnimationFrame(resize);
  const localized = {
   en: [slogan, 'Turn comment keywords into automatic direct messages.', 'Flight deals and travel discoveries, delivered by newsletter.', 'A personal AI assistant connecting memory and tools.', 'Connect knowledge. Execute tasks. Verify and iterate.', 'From scripts to scenes, previs and AI filmmaking.'],
   ja: [slogan, 'コメントのキーワードから、自動DMへ。', '航空券の特価と旅の発見をニュースレターで。', '記憶とツールをつなぐ、自分のAIアシスタント。', '知識をつなぎ、タスクを実行し、結果を検証する。', 'シナリオからシーン、プリビズ、AI映像制作へ。'],

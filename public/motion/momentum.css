@@ -1,5 +1,7 @@
 :root{--bg:#091d14;--fg:#edffdf;--accent:#d1ff43;--phase:0;--pulse:0;--enter:1;--exit:1}
-.stage{color:var(--fg)}
+/* Use a fixed top-left origin; JS calculates the scaled composition's position. */
+html body{display:block;position:relative}
+body .stage{color:var(--fg);position:fixed;left:0;top:0;transform-origin:0 0}
 .scene-art{will-change:transform}
 .scene.active .scene-art{transform:translateX(calc((1 - var(--enter))*240px)) translateY(calc(var(--swing)*9px)) rotate(calc((1 - var(--enter))*18deg + var(--swing)*1.5deg)) scale(calc(.93 + var(--enter)*.07 + var(--pulse)*.065 + var(--impact)*.1))}
 .scene.active .intro-mark{transform:scale(calc(.3 + var(--enter)*.7 + var(--pulse)*.07)) rotate(calc(-12deg + var(--phase)*25deg));box-shadow:28px 28px 0 #b79af44a,0 0 100px #d1ff4330}

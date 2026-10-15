@@ -46,6 +46,11 @@ page embeds the same HTML, keeping its sound and pause controls. `?lang=en` and
 `window.twmsMotion.seek(seconds)` and `.pause()` allow deterministic visual QA.
 Reduced-motion users receive a paused brand frame. Audio and animation suspend
 while the document is hidden; fullscreen flashing/strobe effects are not used.
+The composition uses a fixed top-left transform origin and explicit scaled
+coordinates from the visual viewport, rather than Grid's automatic centering.
+Resize, orientation, visual-viewport changes and page restoration recalculate
+the position. `stage-layout.js` is imported by the module player; layout tests
+cover portrait, landscape, iframe dimensions and viewport offsets.
 
 Parent/player messages are checked against the same origin and the expected
 window. No private repository text, keys, internal metrics or infrastructure
