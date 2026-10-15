@@ -1,473 +1,192 @@
 ---
-import type { Lang } from "../i18n";
-import { useTranslations, languages, getLocalizedPath } from "../i18n";
-
-interface Props {
-  lang: Lang;
-}
-
+import type { Lang } from '../i18n';
+import ContactForm from './ContactForm.astro';
+import ServicePreview from './ServicePreview.astro';
+import { useTranslations, languages, getLocalizedPath } from '../i18n';
+interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
-const currentYear = new Date().getFullYear();
+const c = {
+ ko: { intro: '작은 시작에서, 더 큰 가능성으로.', body: 'AI와 함께 만들고, 반복을 자동화합니다. 작은 아이디어를 실제로 작동하는 서비스로 바꾸는 일. TWMS가 만들어가는 모멘텀입니다.', explore: '우리가 만드는 것들', scroll: '아래에서 더 만나보세요', approach: '작은 승리를 만드는 방식', products: '아이디어를 일상으로.', productBody: '반복하는 일은 줄이고, 중요한 일에 집중할 수 있도록.', next: '다음 작은 승리', contact: '다음 아이디어를 함께.', contactBody: '작은 질문도, 새로운 가능성도 환영합니다.', sound: '소리 켜기', mute: '소리 끄기', pause: '일시 정지', play: '재생', film: 'TWMS 브랜드 필름', skip: '본문으로 건너뛰기' },
+ en: { intro: 'Small beginnings. Bigger possibilities.', body: 'We build with AI and automate the repetitive. Turning small ideas into products that work. This is the momentum we’re creating at TWMS.', explore: 'Explore our work', scroll: 'There’s more below', approach: 'How we make small wins', products: 'Ideas, made everyday.', productBody: 'Less repetitive work. More room for what matters.', next: 'The next small wins', contact: 'Let’s build what’s next.', contactBody: 'Small questions and new possibilities are always welcome.', sound: 'Sound on', mute: 'Sound off', pause: 'Pause', play: 'Play', film: 'TWMS brand film', skip: 'Skip to content' },
+ ja: { intro: '小さな始まりから、大きな可能性へ。', body: 'AIとともにつくり、繰り返しを自動化する。小さなアイデアを、実際に動くサービスへ。それがTWMSのモメンタムです。', explore: '私たちのサービス', scroll: 'スクロールしてもっと見る', approach: '小さな勝利をつくる方法', products: 'アイデアを、日常に。', productBody: '繰り返す作業を減らし、大切なことに集中するために。', next: '次の小さな勝利', contact: '次のアイデアを、ともに。', contactBody: '小さな質問も、新しい可能性も歓迎します。', sound: '音声オン', mute: '音声オフ', pause: '一時停止', play: '再生', film: 'TWMSブランドフィルム', skip: '本文へスキップ' }
+}[lang];
+const principles = [
+ { no: '01', word: 'COLLABORATE.', ...t.features.ai },
+ { no: '02', word: 'AUTOMATE.', ...t.features.automation },
+ { no: '03', word: 'BUILD MOMENTUM.', ...t.features.smallWins },
+];
+const upcoming = [t.services.marketing, t.services.angry, t.services.admin];
+const serviceCopy = {
+ ko: { navigation: '서비스 바로가기', inquiry: '프로젝트 문의', focus: 'FOCUS', descriptions: ['에러페어와 항공 특가의 발견. 생각만 하던 여행을 더 가까이.', '흩어진 경험과 리뷰를 모아, 선택에 도움이 되는 정보를 살펴봅니다.', '여러 선택지 사이에서 나의 취향과 기준에 맞는 발견을 찾아갑니다.', '지식과 도구를 연결해, 일상의 작업을 함께하는 AI 어시스턴트.', '여러 AI 에이전트와 도구의 흐름을 조율하고, 아이디어를 실행으로 이어갑니다.'], features: [['에러페어 발견', '항공 특가', '여행 뉴스레터'], ['리뷰 탐색', '경험 공유', '선택의 근거'], ['취향 탐색', '선택지 비교', '나에게 맞는 발견'], ['AI 어시스턴트', '지식 연결', '작업 지원'], ['에이전트 조율', '도구 연결', '워크플로 설계']] },
+ en: { navigation: 'Explore the services', inquiry: 'Ask about this project', focus: 'FOCUS', descriptions: ['Turn travel possibilities into a plan. Give your next journey a clearer direction.', 'Bring experiences and reviews together to inform your next choice.', 'Discover options that fit your preferences and what matters to you.', 'An AI assistant connecting knowledge and tools to support everyday work.', 'Coordinate AI agents and tools, turning connected workflows into action.'], features: [['Travel planning', 'Itineraries', 'Explore journeys'], ['Explore reviews', 'Shared experiences', 'Informed choices'], ['Explore preferences', 'Compare options', 'Find your fit'], ['AI assistant', 'Connected knowledge', 'Task support'], ['Agent coordination', 'Connected tools', 'Workflow design']] },
+ ja: { navigation: 'サービス一覧', inquiry: 'プロジェクトについて問い合わせ', focus: 'FOCUS', descriptions: ['旅の可能性を、一つの計画に。次の旅をもっと描きやすく。', '体験とレビューを集め、次の選択に役立つ情報を探します。', '自分の好みや大切にする基準に合う選択肢を見つけます。', '知識とツールをつなぎ、日々の作業を支えるAIアシスタント。', '複数のAIエージェントとツールを連携させ、アイデアを実行へ。'], features: [['旅行計画', '旅程づくり', '旅の探索'], ['レビュー探索', '体験の共有', '選択の根拠'], ['好みの探索', '選択肢の比較', '自分に合う発見'], ['AIアシスタント', '知識の連携', '作業サポート'], ['エージェント連携', 'ツール連携', 'ワークフロー設計']] },
+}[lang];
+const projects = [
+ { id: 'tripplan', name: 'Tripplan', no: '02', category: 'TRAVEL / PLANNING', slogan: 'A LITTLE PLAN. A BIG JOURNEY.', theme: 'electric-blue', art: 'travel', reverse: true },
+ { id: 'jarvis', name: 'Jarvis', no: '03', category: 'AI / EVERYDAY ASSISTANT', slogan: 'A LITTLE HELP. MORE POSSIBILITY.', theme: 'forest', art: 'assistant', reverse: false },
+ { id: 'orch-ai', name: 'Orch AI', no: '04', category: 'AI / ORCHESTRATION', slogan: 'AI AGENTS. IN SYNC.', theme: 'pink', art: 'agents', reverse: true },
+ { id: 'twms-studio', name: 'TWMS Studio', no: '05', category: 'STUDIO / CREATIVE EXPLORATION', slogan: 'SMALL IDEAS. MADE REAL.', theme: 'butter', art: 'studio', reverse: false },
+];
+const studioCopy = {
+ ko: { description: '새로운 아이디어를 실험하고, 작은 영감을 구체적인 결과물로 만들어가는 TWMS의 크리에이티브 스튜디오.', features: ['아이디어 탐색', '크리에이티브 실험', '함께 만들기'] },
+ en: { description: 'A creative studio for exploring ideas and turning small sparks of inspiration into tangible work.', features: ['Explore ideas', 'Creative experiments', 'Create together'] },
+ ja: { description: '新しいアイデアを試し、小さなひらめきを具体的な形にするTWMSのクリエイティブスタジオ。', features: ['アイデア探索', '創造的な実験', 'ともにつくる'] },
+}[lang];
+const projectDescriptions = [...serviceCopy.descriptions.filter((_, index) => index !== 1 && index !== 2), studioCopy.description];
+const projectFeatures = [...serviceCopy.features.filter((_, index) => index !== 1 && index !== 2), studioCopy.features];
+const projectUrls: Record<string, string> = { tripplan: 'https://tripplan.twms.ai/' };
+const visitService = { ko: '서비스 바로가기', en: 'Visit service', ja: 'サービスを開く' }[lang];
+const previewLabel = { ko: '화면 미리보기', en: 'Preview screens', ja: '画面プレビュー' }[lang];
+const previewServices = ['jarvis', 'orch-ai', 'twms-studio'] as const;
+const hasPreview = (id: string) => previewServices.some(service => service === id);
 ---
 
-<header class="twms-header" data-twms-header>
-  <div class="twms-header-inner">
-    <div class="flex items-center gap-3">
-      <a
-        href={getLocalizedPath("/", lang)}
-        class="twms-logo-long"
-        data-logo-long
-        aria-label="TWMS - Tiny Wins Make Success"
-      >
-        <span>Tiny Wins Make Success</span>
-      </a>
-      <a
-        href={getLocalizedPath("/", lang)}
-        class="twms-logo-short hidden"
-        data-logo-short
-        aria-label="TWMS"
-      >
-        <span>TWMS</span>
-      </a>
-    </div>
-    <div class="flex items-center gap-6">
-      <nav class="hidden gap-6 text-sm md:flex">
-        <a href="#about" class="hover:opacity-80">{t.nav.about}</a>
-        <a href="#features" class="hover:opacity-80">{t.nav.features}</a>
-        <a href="#services" class="hover:opacity-80">{t.nav.services}</a>
-        <a
-          href="https://blog.twms.in/"
-          class="hover:opacity-80"
-          data-analytics-event="blog_click"
-          data-analytics-location="header"
-        >{t.nav.blog}</a>
-      </nav>
-      <!-- Language switcher icon -->
-      <div class="relative" data-lang-switcher>
-      <button
-        class="flex items-center justify-center rounded-full p-2 hover:bg-slate-100 transition-colors"
-        data-lang-btn
-        aria-label="Select language"
-      >
-        <svg class="h-5 w-5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
-        </svg>
-      </button>
-      <div
-        class="absolute right-0 top-full mt-2 hidden min-w-[120px] rounded-lg bg-white py-2 shadow-lg ring-1 ring-slate-200 z-50"
-        data-lang-menu
-      >
-        <a
-          href="/"
-          class={`block px-4 py-2 text-sm hover:bg-slate-100 ${lang === 'ko' ? 'font-medium text-slate-900' : 'text-slate-600'}`}
-          data-analytics-event="language_change"
-          data-analytics-label="ko"
-        >한국어</a>
-        <a
-          href="/en/"
-          class={`block px-4 py-2 text-sm hover:bg-slate-100 ${lang === 'en' ? 'font-medium text-slate-900' : 'text-slate-600'}`}
-          data-analytics-event="language_change"
-          data-analytics-label="en"
-        >English</a>
-        <a
-          href="/ja/"
-          class={`block px-4 py-2 text-sm hover:bg-slate-100 ${lang === 'ja' ? 'font-medium text-slate-900' : 'text-slate-600'}`}
-          data-analytics-event="language_change"
-          data-analytics-label="ja"
-        >日本語</a>
-      </div>
-      </div>
-    </div>
-  </div>
+<a class="skip-link" href="#about">{c.skip}</a>
+<header class="site-header" data-header>
+ <div class="header-inner">
+  <a class="wordmark" href={getLocalizedPath('/', lang)} aria-label="TWMS — Tiny Wins Make Success">TWMS<span class="brand-dot"></span></a>
+  <nav aria-label={t.nav.about}>
+   <a href="#about">{t.nav.about}</a><a href="#features">{t.nav.features}</a><a href="#services">{t.nav.services}</a>
+   <a href="https://blog.twms.ai/" target="_blank" rel="noopener noreferrer" data-analytics-event="blog_click" data-analytics-location="header">{t.nav.blog} ↗</a>
+  </nav>
+  <details class="language-picker">
+   <summary aria-label="Select language"><span aria-hidden="true">◎</span> {lang.toUpperCase()} <span aria-hidden="true">⌄</span></summary>
+   <div class="language-menu">{Object.entries(languages).map(([code, label]) => <a href={getLocalizedPath('/', code as Lang)} aria-current={code === lang ? 'page' : undefined} data-analytics-event="language_change" data-analytics-label={code}>{label}<span>{code === lang ? '✓' : ''}</span></a>)}</div>
+  </details>
+ </div>
 </header>
-
-<main class="twms-container">
-  <section id="about" class="space-y-10 p-6 md:p-10">
-    <div class="grid gap-12 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] md:items-center">
-      <div class="space-y-8">
-        <h1 class="twms-tagline text-slate-900">
-          Tiny Wins<br />Make Success
-        </h1>
-        <p class="max-w-xl text-sm leading-relaxed text-slate-700" set:html={t.hero.description} />
-        <div class="flex flex-col gap-3 sm:flex-row">
-          <a
-            href="https://autogram.twms.in/"
-            class="twms-primary-cta"
-            data-analytics-event="autogram_cta_click"
-            data-analytics-location="hero"
-          >{t.hero.autogramCta}</a>
-          <a
-            href="https://blog.twms.in/"
-            class="twms-secondary-cta"
-            data-analytics-event="blog_click"
-            data-analytics-location="hero"
-          >{t.hero.blogCta}</a>
-        </div>
-      </div>
-
-      <div class="twms-logo-square" aria-label="TWMS - Tiny Wins Make Success">
-        <span>Tiny</span>
-        <span>Wins</span>
-        <span>Make</span>
-        <span>Success</span>
-      </div>
+<main>
+ <section class="film-section" aria-label={c.film}>
+  <div class="film-frame">
+   <iframe id="brand-film" class="motion-frame" src={`/motion/twms-momentum.html?embedded=1&lang=${lang}`} title={c.film} allow="autoplay" loading="eager"></iframe>
+   <div class="film-controls">
+    <span class="film-caption"><span class="status-dot"></span> MOMENTUM / 00:19.5</span>
+    <div class="film-buttons">
+     <button type="button" class="sound-button" data-sound data-on={c.sound} data-off={c.mute} aria-label={c.sound} title={c.sound} aria-pressed="false">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+       <path d="M11 5 6 9H3v6h3l5 4V5Z" />
+       <g class="sound-muted"><path d="m16 9 6 6m0-6-6 6" /></g>
+       <g class="sound-audible"><path d="M15 8a6 6 0 0 1 0 8M18 5a10 10 0 0 1 0 14" /></g>
+      </svg>
+     </button>
+     <button type="button" data-play data-play-label={c.play} data-pause-label={c.pause} aria-label={c.pause}><span data-play-icon aria-hidden="true">Ⅱ</span></button>
     </div>
-  </section>
-
-  <section id="features" class="space-y-8 rounded-[1.5rem] bg-twms-surface-muted p-6 md:p-10">
-    <h2 class="font-display text-xl text-slate-900">{t.features.title}</h2>
-    <div class="grid gap-6 md:grid-cols-3">
-      <div class="twms-pill space-y-3">
-        <h3 class="font-medium">{t.features.ai.title}</h3>
-        <p class="text-xs text-slate-600">{t.features.ai.description}</p>
-      </div>
-      <div class="twms-pill space-y-3">
-        <h3 class="font-medium">{t.features.automation.title}</h3>
-        <p class="text-xs text-slate-600">{t.features.automation.description}</p>
-      </div>
-      <div class="twms-pill space-y-3">
-        <h3 class="font-medium">{t.features.smallWins.title}</h3>
-        <p class="text-xs text-slate-600">{t.features.smallWins.description}</p>
-      </div>
+   </div>
+   <div class="film-progress" aria-hidden="true"><span data-progress></span></div>
+  </div>
+  <div class="film-bottom"><span>Tiny Wins. Make Success.</span><a href="#about">{c.scroll}<span aria-hidden="true">↓</span></a></div>
+ </section>
+ <section class="intro section-shell" id="about">
+  <div class="eyebrow"><span class="section-number">01 / ABOUT US</span><span class="small-label">A LITTLE EVERY DAY.</span></div>
+  <div class="intro-grid">
+   <h1>Tiny Wins.<br />Make <span class="serif-word">Success.</span><span class="lime-period">↗</span></h1>
+   <div class="intro-copy"><h2>{c.intro}</h2><p>{c.body}</p><a class="text-link" href="#services">{c.explore}<span aria-hidden="true">↗</span></a></div>
+  </div>
+  <div class="manifesto-strip"><span>TINY WINS</span><span aria-hidden="true">✳</span><span>MAKE SUCCESS</span><span aria-hidden="true">✳</span><span>ONE STEP AT A TIME</span></div>
+ </section>
+ <section class="approach section-shell" id="features">
+  <div class="eyebrow"><span class="section-number">02 / OUR APPROACH</span></div>
+  <div class="section-heading"><h2>{c.approach}</h2><span class="orbit-symbol" aria-hidden="true">✳</span></div>
+  <div class="principle-grid">{principles.map(item => <article class="principle"><span class="principle-number">{item.no}</span><h3>{item.word}</h3><h4>{item.title}</h4><p>{item.description}</p></article>)}</div>
+ </section>
+ <section class="products section-shell" id="services">
+  <div class="eyebrow"><span class="section-number">03 / SELECTED WORK</span><span class="small-label">ALWAYS IN PROGRESS.</span></div>
+  <div class="section-heading"><h2>{c.products}</h2><p>{c.productBody}</p></div>
+  <nav class="service-jumps" aria-label={serviceCopy.navigation}>
+   <a href="#autogram"><span>01</span>Autogram<span aria-hidden="true">↓</span></a>
+   {projects.map(project => <a href={`#${project.id}`}><span>{project.no}</span>{project.name}<span aria-hidden="true">↓</span></a>)}
+  </nav>
+  <article class="featured-product" id="autogram">
+   <div class="product-art" aria-label="Autogram — Instagram automation">
+    <span class="art-label">LESS REPETITION. MORE CONNECTION.</span>
+    <div class="automation-diagram">
+     <div class="message-card"><span class="message-icon">↳</span><span>COMMENT<span class="message-line"></span><span class="message-line short"></span></span><span class="message-check">✓</span></div>
+     <div class="connection-path"><span></span><span>✳</span><span></span></div>
+     <div class="message-card result"><span class="message-icon">↗</span><span>DIRECT MESSAGE<span class="message-line"></span><span class="message-line short"></span></span><span class="message-check">✓</span></div>
     </div>
-  </section>
-
-  <section id="services" class="space-y-8">
-    <h2 class="font-display text-xl text-slate-900">{t.services.title}</h2>
-    <div class="twms-carousel" data-carousel>
-      <div class="twms-carousel-track" data-carousel-track>
-        <div class="twms-service-card">
-          <div class="twms-service-card-logo">
-            <img src="/sns_automation_logo.png" alt="SNS Automation" draggable="false" />
-          </div>
-          <div class="twms-service-card-content">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <h3 class="font-medium">{t.services.autogram.title}</h3>
-                <a href="https://www.instagram.com/autogram.official/" target="_blank" rel="noopener noreferrer" aria-label="Autogram Instagram">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
-                    <defs>
-                      <linearGradient id="instagram-gradient" x1="0%" y1="100%" x2="100%" y2="0%">
-                        <stop offset="0%" style="stop-color:#FFDC80" />
-                        <stop offset="25%" style="stop-color:#F77737" />
-                        <stop offset="50%" style="stop-color:#E1306C" />
-                        <stop offset="75%" style="stop-color:#C13584" />
-                        <stop offset="100%" style="stop-color:#833AB4" />
-                      </linearGradient>
-                    </defs>
-                    <path fill="url(#instagram-gradient)" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                  </svg>
-                </a>
-              </div>
-              <span class="twms-badge twms-badge-beta">{t.services.badges.beta}</span>
-            </div>
-            <p class="text-xs text-slate-600">{t.services.autogram.description}</p>
-            <a
-              href="https://autogram.twms.in/"
-              class="twms-service-btn"
-              data-analytics-event="autogram_cta_click"
-              data-analytics-location="services"
-            >
-              {t.services.autogram.cta}
-            </a>
-          </div>
-        </div>
-        <div class="twms-service-card">
-          <div class="twms-service-card-logo">
-            <div class="twms-service-card-logo-placeholder">
-              <span>?</span>
-            </div>
-          </div>
-          <div class="twms-service-card-content">
-            <div class="flex items-center justify-between">
-              <h3 class="font-medium">{t.services.marketing.title}</h3>
-              <span class="twms-badge twms-badge-planned">{t.services.badges.planned}</span>
-            </div>
-            <p class="text-xs text-slate-600">{t.services.marketing.description}</p>
-            <span class="twms-service-btn twms-service-btn-disabled">{t.services.marketing.cta}</span>
-          </div>
-        </div>
-        <div class="twms-service-card">
-          <div class="twms-service-card-logo">
-            <div class="twms-service-card-logo-placeholder">
-              <span>?</span>
-            </div>
-          </div>
-          <div class="twms-service-card-content">
-            <div class="flex items-center justify-between">
-              <h3 class="font-medium">{t.services.angry.title}</h3>
-              <span class="twms-badge twms-badge-planned">{t.services.badges.planned}</span>
-            </div>
-            <p class="text-xs text-slate-600">{t.services.angry.description}</p>
-            <span class="twms-service-btn twms-service-btn-disabled">{t.services.angry.cta}</span>
-          </div>
-        </div>
-        <div class="twms-service-card">
-          <div class="twms-service-card-logo">
-            <div class="twms-service-card-logo-placeholder">
-              <span>?</span>
-            </div>
-          </div>
-          <div class="twms-service-card-content">
-            <div class="flex items-center justify-between">
-              <h3 class="font-medium">{t.services.admin.title}</h3>
-              <span class="twms-badge twms-badge-planned">{t.services.badges.planned}</span>
-            </div>
-            <p class="text-xs text-slate-600">{t.services.admin.description}</p>
-            <span class="twms-service-btn twms-service-btn-disabled">{t.services.admin.cta}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <footer class="mt-8 flex flex-col gap-3 border-t border-twms-border-subtle pt-6 text-xs text-slate-500 md:flex-row md:items-center md:justify-between">
-    <div class="flex items-center gap-3">
-      <p class="font-display tracking-[0.25em] text-slate-800">TWMS</p>
-      <a
-        href="https://blog.twms.in/"
-        aria-label={t.nav.blog}
-        class="text-slate-500 hover:text-slate-700 transition-colors"
-        data-analytics-event="blog_click"
-        data-analytics-location="footer"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-        </svg>
-      </a>
-      <a
-        href="mailto:info@twms.in"
-        aria-label="Email"
-        class="text-slate-500 hover:text-slate-700 transition-colors"
-        data-analytics-event="email_click"
-        data-analytics-location="footer"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-        </svg>
-      </a>
-    </div>
-    <p>{t.footer.copyright.replace('{year}', String(currentYear))}</p>
-  </footer>
+    <span class="art-wordmark">Autogram<span>↗</span></span>
+   </div>
+   <div class="product-copy"><div class="product-meta"><span>01 / SOCIAL AUTOMATION</span><span class="badge"><span class="status-dot"></span>{t.services.badges.beta}</span></div><h3>{t.services.autogram.title}</h3><p>{t.services.autogram.description}</p><a class="button-primary" href="https://autogram.twms.ai/" target="_blank" rel="noopener noreferrer" data-analytics-event="autogram_cta_click" data-analytics-location="services">{visitService}<span aria-hidden="true">↗</span></a><a class="instagram-link" href="https://www.instagram.com/autogram.official/" target="_blank" rel="noopener noreferrer" aria-label="Autogram Instagram — @autogram.official" title="@autogram.official">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+   </a></div>
+  </article>
+  {projects.map((project, index) => <article class:list={['featured-product', 'project-feature', project.theme, { 'is-reversed': project.reverse }]} id={project.id}>
+   <div class="product-art">
+    <span class="art-label">{project.slogan}</span>
+    {project.art === 'travel' && <div class="travel-art" aria-hidden="true">
+     <div class="map-grid"></div><svg viewBox="0 0 360 200" fill="none"><path d="M45 145C25 25 160 25 170 90S315 205 315 45" stroke="currentColor" stroke-width="2" stroke-dasharray="6 6"/><circle cx="45" cy="145" r="9" fill="currentColor"/><circle cx="170" cy="90" r="7" fill="currentColor"/><circle cx="315" cy="45" r="9" fill="currentColor"/></svg>
+     <span class="map-tag origin">01 / START HERE</span><span class="map-tag destination">03 / SOMEWHERE NEW</span><div class="itinerary-card"><span>YOUR NEXT CHAPTER</span><strong>A way forward. ↗</strong><div><i></i><i></i><i></i></div></div>
+    </div>}
+    {project.art === 'reviews' && <div class="review-art" aria-hidden="true"><div class="review-sheet"><span>EXPERIENCES</span><strong>Read the stories.</strong><div class="review-stars">★★★★★</div><div class="review-line"></div><div class="review-line short"></div></div><div class="review-sheet second"><span>INSIGHTS</span><strong>Choose better.</strong><div class="review-stars">★★★★☆</div><div class="review-line"></div><div class="review-line short"></div></div></div>}
+    {project.art === 'studio' && <div class="studio-art" aria-hidden="true"><div class="studio-canvas"><div class="studio-toolbar"><span>● ● ●</span><span>TWMS / STUDIO</span></div><div class="studio-composition"><span class="studio-square"></span><span class="studio-circle"></span><span class="studio-spark">✳</span><strong>Make<br /><em>something.</em></strong></div><div class="studio-caption"><span>IDEA → EXPERIMENT → CREATE</span><span>↗</span></div></div></div>}
+    {project.art === 'assistant' && <div class="jarvis-portrait" aria-hidden="true">
+     <svg viewBox="0 0 400 280" fill="none"><circle cx="200" cy="125" r="100" stroke="#b79af4" stroke-opacity=".18"/><circle cx="200" cy="125" r="79" stroke="#b79af4" stroke-opacity=".35"/><path d="M110 125A90 90 0 0 1 200 35M290 125A90 90 0 0 1 200 215" stroke="#d1ff43" stroke-width="3" stroke-linecap="round"/><circle cx="200" cy="125" r="58" fill="#b79af4"/><text x="200" y="153" text-anchor="middle" fill="#102b1b" font-family="Inter, Arial, sans-serif" font-size="82" font-weight="800">J</text><path d="M95 251H119M129 238V264M140 245V257M151 229V273M162 238V264M173 219V279M184 231V267M195 238V264M206 223V279M217 235V267M228 242V260M239 233V269M250 244V258M261 237V265M273 251H305" stroke="#d1ff43" stroke-width="5" stroke-linecap="round"/></svg>
+     <span class="jarvis-bubble ask-bubble">HELLO, JARVIS <span>↗</span></span><span class="jarvis-bubble reply-bubble"><i></i><i></i><i></i></span><span class="jarvis-listening">VOICE / MEMORY / YOUR DAY</span>
+    </div>}
+    {project.art === 'agents' && <div class="orch-network" aria-hidden="true">
+     <svg viewBox="0 0 400 280" fill="none"><path d="M70 70H184V130H270M70 210H184V130M270 130H345V210H184" stroke="#426b39" stroke-width="2"/><path d="M184 130H270M345 210H184" stroke="#426b39" stroke-width="2" stroke-dasharray="5 6"/><circle cx="184" cy="130" r="8" fill="#102b1b"/><circle cx="345" cy="210" r="5" fill="#426b39"/><path d="m248 125 7 5-7 5m-28 70-7 5 7 5" stroke="#426b39" stroke-width="2"/></svg>
+     <span class="orch-node source-node"><small>01 / INPUT</small><strong>◇ Knowledge</strong></span><span class="orch-node task-node"><small>02 / PLAN</small><strong>≡ Tasks</strong></span><span class="orch-node execute-node"><small>03 / EXECUTE</small><strong>↗ Agents</strong><span>BUILD → VERIFY</span></span><span class="orch-loop">↻ FEEDBACK LOOP</span><span class="orch-network-label">CONNECTED. COORDINATED.</span>
+    </div>}
+    <span class="art-wordmark">{project.name}<span>↗</span></span>
+   </div>
+   <div class="product-copy"><div class="product-meta"><span>{project.no} / {project.category}</span></div><h3>{project.name}</h3><p>{projectDescriptions[index]}</p><ul class="project-focus" aria-label={serviceCopy.focus}>{projectFeatures[index].map(feature => <li>{feature}</li>)}</ul><div class="project-actions">
+    {hasPreview(project.id) && <button type="button" class="button-primary" data-open-preview={`preview-${project.id}`} aria-haspopup="dialog" aria-controls={`preview-${project.id}`} data-analytics-event="service_preview_open" data-analytics-location={project.id}>{previewLabel}<span aria-hidden="true">⊞</span></button>}
+    {projectUrls[project.id] ? <a class="button-primary" href={projectUrls[project.id]} target="_blank" rel="noopener noreferrer" data-analytics-event="service_click" data-analytics-location={project.id}>{visitService}<span aria-hidden="true">↗</span></a> : <button type="button" class:list={['button-primary', { 'button-outline': hasPreview(project.id) }]} data-open-contact data-contact-subject={project.name} data-analytics-event="contact_open" data-analytics-location={project.id}>{serviceCopy.inquiry}<span aria-hidden="true">↗</span></button>}
+   </div>
+   {project.id === 'twms-studio' && <a class="instagram-link" href="https://www.instagram.com/nori_hini/" target="_blank" rel="noopener noreferrer" aria-label="TWMS Studio Instagram — @nori_hini" title="@nori_hini" data-analytics-event="instagram_click" data-analytics-location="twms-studio">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+   </a>}
+   </div>
+  </article>)}
+  <div class="upcoming-heading"><h3>{c.next}</h3><span>ON THE HORIZON</span></div>
+  <div class="upcoming-grid">{upcoming.map((item, index) => <article class="upcoming-card"><div><span class="project-index">{String(index + projects.length + 2).padStart(2, '0')}</span><span class="planned-badge">{t.services.badges.planned}</span></div><h4>{item.title}</h4><p>{item.description}</p><span class="coming-soon">{item.cta}<span aria-hidden="true">↗</span></span></article>)}</div>
+ </section>
+ <section class="contact section-shell"><div class="contact-top"><span class="section-number">KEEP THE MOMENTUM GOING.</span><span aria-hidden="true">↗</span></div><h2>{c.contact}</h2><p>{c.contactBody}</p><button type="button" class="contact-link" data-open-contact data-analytics-event="contact_open" data-analytics-location="contact">info@twms.ai<span aria-hidden="true">↗</span></button></section>
 </main>
+<footer class="site-footer section-shell"><a class="wordmark" href={getLocalizedPath('/', lang)}>TWMS<span class="brand-dot"></span></a><p>{t.footer.copyright.replace('{year}', String(new Date().getFullYear()))}</p><a href="https://blog.twms.ai/" target="_blank" rel="noopener noreferrer" data-analytics-event="blog_click" data-analytics-location="footer">{t.nav.blog} ↗</a><a href="#top" aria-label="Back to top">↑</a></footer>
+<ContactForm lang={lang} />
+{previewServices.map(service => <ServicePreview lang={lang} service={service} />)}
 
-<script is:inline>
-  if (typeof window !== "undefined") {
-    const header = document.querySelector("[data-twms-header]");
-    const longLogo = header?.querySelector("[data-logo-long]");
-    const shortLogo = header?.querySelector("[data-logo-short]");
-
-    const onScroll = () => {
-      if (!header || !longLogo || !shortLogo) return;
-      const scrolled = window.scrollY > 40;
-      header.classList.toggle("is-scrolled", scrolled);
-
-      if (scrolled) {
-        longLogo.classList.add("hidden");
-        shortLogo.classList.remove("hidden");
-      } else {
-        longLogo.classList.remove("hidden");
-        shortLogo.classList.add("hidden");
-      }
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-
-    // Language switcher toggle
-    const langBtn = document.querySelector("[data-lang-btn]");
-    const langMenu = document.querySelector("[data-lang-menu]");
-    if (langBtn && langMenu) {
-      langBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        langMenu.classList.toggle("hidden");
-      });
-    }
-
-    // Close language menu on outside click
-    document.addEventListener("click", () => {
-      langMenu?.classList.add("hidden");
-    });
-
-    // Track meaningful outbound and language interactions in GA4.
-    document.addEventListener("click", (event) => {
-      if (!(event.target instanceof Element)) return;
-
-      const target = event.target.closest("[data-analytics-event]");
-      const eventName = target?.dataset.analyticsEvent;
-      if (!target || !eventName || typeof window.gtag !== "function") return;
-
-      window.gtag("event", eventName, {
-        event_label: target.dataset.analyticsLabel || target.textContent?.trim() || undefined,
-        link_url: target instanceof HTMLAnchorElement ? target.href : undefined,
-        link_text: target.textContent?.trim() || undefined,
-        placement: target.dataset.analyticsLocation || undefined,
-        page_language: document.documentElement.lang,
-      });
-    });
-
-    // Center-focused carousel with drag support
-    const carousel = document.querySelector("[data-carousel]");
-    const track = document.querySelector("[data-carousel-track]");
-    if (carousel && track) {
-      const cards = Array.from(track.querySelectorAll(".twms-service-card"));
-      const cardCount = cards.length;
-
-      const getGap = () => window.innerWidth >= 768 ? 24 : 8;
-      const getCardWidth = () => {
-        const card = track.querySelector(".twms-service-card");
-        return card ? card.offsetWidth + getGap() : 280;
-      };
-      let cardWidth = getCardWidth();
-
-      cards.forEach(card => {
-        const cloneEnd = card.cloneNode(true);
-        track.appendChild(cloneEnd);
-      });
-      cards.reverse().forEach(card => {
-        const cloneStart = card.cloneNode(true);
-        track.prepend(cloneStart);
-      });
-
-      const allCards = track.querySelectorAll(".twms-service-card");
-      let currentIndex = cardCount;
-      let isTransitioning = false;
-
-      const normalizeIndex = (index) => {
-        return ((index - cardCount) % cardCount + cardCount) % cardCount;
-      };
-
-      const updateActiveCards = () => {
-        const normalizedCurrent = normalizeIndex(currentIndex);
-        allCards.forEach((card, i) => {
-          const normalizedI = normalizeIndex(i);
-          card.classList.remove("is-active", "is-adjacent");
-
-          if (normalizedI === normalizedCurrent) {
-            card.classList.add("is-active");
-          } else if (
-            normalizedI === (normalizedCurrent - 1 + cardCount) % cardCount ||
-            normalizedI === (normalizedCurrent + 1) % cardCount
-          ) {
-            card.classList.add("is-adjacent");
-          }
-        });
-      };
-
-      const getOffset = () => {
-        const carouselWidth = carousel.offsetWidth;
-        const actualCardWidth = cardWidth - getGap();
-        const centerOffset = (carouselWidth - actualCardWidth) / 2;
-        return currentIndex * cardWidth - centerOffset;
-      };
-
-      const scrollToIndex = (index, smooth = true) => {
-        currentIndex = index;
-        isTransitioning = smooth;
-        track.style.transition = smooth ? "transform 0.5s ease-in-out" : "none";
-        track.style.transform = `translateX(-${getOffset()}px)`;
-        updateActiveCards();
-      };
-
-      track.addEventListener("transitionend", () => {
-        isTransitioning = false;
-        if (currentIndex >= cardCount * 2) {
-          currentIndex = currentIndex - cardCount;
-          track.style.transition = "none";
-          track.style.transform = `translateX(-${getOffset()}px)`;
-        } else if (currentIndex < cardCount) {
-          currentIndex = currentIndex + cardCount;
-          track.style.transition = "none";
-          track.style.transform = `translateX(-${getOffset()}px)`;
-        }
-      });
-
-      const nextSlide = () => {
-        if (isTransitioning) return;
-        scrollToIndex(currentIndex + 1);
-      };
-
-      const prevSlide = () => {
-        if (isTransitioning) return;
-        scrollToIndex(currentIndex - 1);
-      };
-
-      let isDragging = false;
-      let startX = 0;
-      let startOffset = 0;
-
-      const getPositionX = (e) => {
-        return e.type.includes("mouse") ? e.pageX : e.touches[0].clientX;
-      };
-
-      const dragStart = (e) => {
-        if (isTransitioning) return;
-        isDragging = true;
-        startX = getPositionX(e);
-        startOffset = getOffset();
-        track.style.transition = "none";
-      };
-
-      const drag = (e) => {
-        if (!isDragging) return;
-        const currentX = getPositionX(e);
-        const diff = startX - currentX;
-        track.style.transform = `translateX(-${startOffset + diff}px)`;
-      };
-
-      const dragEnd = (e) => {
-        if (!isDragging) return;
-        isDragging = false;
-        const endX = e.type.includes("mouse") ? e.pageX : e.changedTouches[0].clientX;
-        const diff = startX - endX;
-
-        if (Math.abs(diff) > 50) {
-          if (diff > 0) {
-            nextSlide();
-          } else {
-            prevSlide();
-          }
-        } else {
-          scrollToIndex(currentIndex);
-        }
-      };
-
-      carousel.addEventListener("mousedown", dragStart);
-      carousel.addEventListener("mousemove", drag);
-      carousel.addEventListener("mouseup", dragEnd);
-      carousel.addEventListener("mouseleave", (e) => {
-        if (isDragging) dragEnd(e);
-      });
-
-      carousel.addEventListener("touchstart", dragStart, { passive: true });
-      carousel.addEventListener("touchmove", drag, { passive: true });
-      carousel.addEventListener("touchend", dragEnd);
-
-      carousel.addEventListener("dragstart", (e) => e.preventDefault());
-
-      let clickStartX = 0;
-      carousel.addEventListener("mousedown", (e) => {
-        clickStartX = e.pageX;
-      });
-      carousel.addEventListener("click", (e) => {
-        if (Math.abs(e.pageX - clickStartX) > 10) return;
-
-        const card = e.target.closest(".twms-service-card");
-        if (!card) return;
-
-        const cardIndex = Array.from(allCards).indexOf(card);
-        if (cardIndex !== -1 && cardIndex !== currentIndex) {
-          scrollToIndex(cardIndex);
-        }
-      });
-
-      scrollToIndex(currentIndex, false);
-
-      window.addEventListener("resize", () => {
-        cardWidth = getCardWidth();
-        scrollToIndex(currentIndex, false);
-      });
-    }
-  }
+<script>
+ const header = document.querySelector<HTMLElement>('[data-header]');
+ const updateHeader = () => header?.classList.toggle('is-floating', window.scrollY > 60);
+ window.addEventListener('scroll', updateHeader, { passive: true });
+ updateHeader();
+ const language = document.querySelector<HTMLDetailsElement>('.language-picker');
+ document.addEventListener('click', event => { if (event.target instanceof Node && !language?.contains(event.target)) language?.removeAttribute('open'); });
+ document.addEventListener('keydown', event => { if (event.key === 'Escape') language?.removeAttribute('open'); });
+ const film = document.querySelector<HTMLIFrameElement>('#brand-film');
+ const sound = document.querySelector<HTMLButtonElement>('[data-sound]');
+ const play = document.querySelector<HTMLButtonElement>('[data-play]');
+ const progress = document.querySelector<HTMLElement>('[data-progress]');
+ if (film && sound && play) {
+  let filmPaused = false, filmMuted = true;
+  const command = (value: string) => film.contentWindow?.postMessage({ type: 'twms-motion-command', command: value }, window.location.origin);
+  const updateControls = () => {
+   const label = filmMuted ? sound.dataset.on! : sound.dataset.off!;
+   sound.setAttribute('aria-label', label);
+   sound.setAttribute('aria-pressed', String(!filmMuted));
+   sound.title = label;
+   play.setAttribute('aria-label', filmPaused ? play.dataset.playLabel! : play.dataset.pauseLabel!);
+   play.querySelector('[data-play-icon]')!.textContent = filmPaused ? '▶' : 'Ⅱ';
+  };
+  sound.addEventListener('click', () => command('toggleMute'));
+  play.addEventListener('click', () => command('togglePlay'));
+  film.addEventListener('load', () => command('state'));
+  window.addEventListener('message', event => {
+   if (event.origin !== window.location.origin || event.source !== film.contentWindow || event.data?.type !== 'twms-motion-state') return;
+   filmPaused = Boolean(event.data.paused); filmMuted = Boolean(event.data.muted);
+   if (progress && event.data.duration > 0) progress.style.width = `${Math.max(0, Math.min(100, event.data.currentTime / event.data.duration * 100))}%`;
+   updateControls();
+  });
+  updateControls();
+ }
+ document.addEventListener('click', event => {
+  if (!(event.target instanceof Element)) return;
+  const target = event.target.closest<HTMLElement>('[data-analytics-event]');
+  const gtag = (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag;
+  if (!target || !gtag) return;
+  gtag('event', target.dataset.analyticsEvent, { event_label: target.dataset.analyticsLabel || target.textContent?.trim(), placement: target.dataset.analyticsLocation, page_language: document.documentElement.lang, link_url: target instanceof HTMLAnchorElement ? target.href : undefined });
+ });
 </script>

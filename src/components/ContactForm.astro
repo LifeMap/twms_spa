@@ -1,0 +1,78 @@
+---
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const sitekey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || (import.meta.env.DEV ? '1x00000000000000000000AA' : '');
+const text = {
+ ko: { title: '작은 질문에서 시작해요.', intro: '글을 남겨주시면 이메일로 답변드리겠습니다.', name: '이름', email: '답장받을 이메일', subject: '문의 주제', message: '문의 내용', placeholder: '궁금한 점이나 함께 만들고 싶은 아이디어를 알려주세요.', consent: '문의 응답을 위해 이름·이메일·문의 내용을 처리하는 데 동의합니다.', send: '문의 보내기', sending: '보내는 중…', success: '문의가 접수되었습니다. 남겨주신 이메일로 답변드리겠습니다.', error: '전송하지 못했습니다. 잠시 후 다시 시도해주세요.', verify: '사람인지 확인을 완료해주세요.', unavailable: '지금은 문의를 전송할 수 없습니다. 잠시 후 다시 방문해주세요.', close: '닫기', again: '새 문의 작성', human: '사람인지 확인', invalid: '입력 내용과 동의 여부를 확인해주세요.' },
+ en: { title: 'Start with a small question.', intro: 'Leave a message and we’ll reply by email.', name: 'Name', email: 'Your email', subject: 'Subject', message: 'Message', placeholder: 'Tell us what you’re curious about or what you’d like to build.', consent: 'I agree to the processing of my name, email and message to respond to this inquiry.', send: 'Send inquiry', sending: 'Sending…', success: 'Your inquiry has been received. We’ll reply to your email.', error: 'We couldn’t send your inquiry. Please try again shortly.', verify: 'Please complete the human verification.', unavailable: 'Inquiries are unavailable right now. Please visit again shortly.', close: 'Close', again: 'Write another inquiry', human: 'Human verification', invalid: 'Please check your entries and consent.' },
+ ja: { title: '小さな質問から、始めましょう。', intro: 'メッセージをいただければ、メールでお返事します。', name: 'お名前', email: '返信先メールアドレス', subject: 'お問い合わせの件名', message: 'お問い合わせ内容', placeholder: 'ご質問や、一緒につくりたいアイデアをお聞かせください。', consent: 'お問い合わせへの回答のため、名前・メールアドレス・内容を処理することに同意します。', send: '送信する', sending: '送信中…', success: 'お問い合わせを受け付けました。メールでお返事します。', error: '送信できませんでした。しばらくしてから再度お試しください。', verify: '本人確認を完了してください。', unavailable: '現在お問い合わせを送信できません。しばらくしてからお試しください。', close: '閉じる', again: '新しいお問い合わせ', human: '人間であることの確認', invalid: '入力内容と同意をご確認ください。' },
+}[lang];
+---
+<dialog class="contact-dialog" id="contact-dialog" aria-labelledby="inquiry-title" data-sitekey={sitekey}>
+ <button type="button" class="dialog-close" data-close-contact aria-label={text.close}>×</button>
+ <span class="section-number">LET’S MAKE A SMALL WIN.</span>
+ <h2 id="inquiry-title">{text.title}</h2><p class="dialog-intro">{text.intro}</p>
+ <form data-contact-form data-sending={text.sending} data-success={text.success} data-error={text.error} data-verify={text.verify} data-invalid={text.invalid}>
+  <div class="form-row"><label>{text.name}<input name="name" autocomplete="name" maxlength="100" required /></label><label>{text.email}<input name="email" type="email" autocomplete="email" maxlength="254" required /></label></div>
+  <label>{text.subject}<input name="subject" maxlength="160" required /></label>
+  <label>{text.message}<textarea name="message" rows="5" minlength="10" maxlength="5000" placeholder={text.placeholder} required></textarea></label>
+  <div class="form-trap" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off" /></label></div>
+  <label class="form-consent"><input name="consent" type="checkbox" required /><span>{text.consent}</span></label>
+  <div data-turnstile aria-label={text.human}></div>
+  {!sitekey && <p class="form-status" role="status">{text.unavailable}</p>}
+  <p class="form-status" data-form-status role="status" aria-live="polite"></p>
+  <button type="submit" class="button-primary" disabled={!sitekey}>{text.send}<span aria-hidden="true">↗</span></button>
+ </form>
+ <div class="form-success" data-form-success hidden><span aria-hidden="true">✓</span><p>{text.success}</p><button type="button" class="text-link" data-new-inquiry>{text.again} ↗</button></div>
+</dialog>
+<script>
+ type Turnstile = { render: (el: HTMLElement, options: Record<string, unknown>) => string; reset: (id: string) => void; remove: (id: string) => void };
+ const dialog = document.querySelector<HTMLDialogElement>('#contact-dialog')!;
+ const form = dialog.querySelector<HTMLFormElement>('form')!;
+ const status = dialog.querySelector<HTMLElement>('[data-form-status]')!;
+ const success = dialog.querySelector<HTMLElement>('[data-form-success]')!;
+ const submit = form.querySelector<HTMLButtonElement>('[type="submit"]')!;
+ const submitHtml = submit.innerHTML;
+ let token = ''; let widget: string | undefined; let loading: Promise<Turnstile> | undefined; let busy = false; let rendering = false;
+ const api = () => (window as unknown as { turnstile?: Turnstile }).turnstile;
+ const loadTurnstile = () => loading ??= new Promise<Turnstile>((resolve, reject) => {
+  if (api()) return resolve(api()!);
+  const script = document.createElement('script'); script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'; script.async = true;
+  script.onload = () => api() ? resolve(api()!) : reject(new Error('Unavailable'));
+  script.onerror = () => { script.remove(); loading = undefined; reject(new Error('Unavailable')); };
+  document.head.append(script);
+ });
+ const renderVerification = async () => {
+  if (!dialog.dataset.sitekey || widget !== undefined || rendering) return;
+  rendering = true;
+  try { const turnstile = await loadTurnstile();
+   if (!dialog.open) return;
+   widget = turnstile.render(dialog.querySelector<HTMLElement>('[data-turnstile]')!, { sitekey: dialog.dataset.sitekey, action: 'contact', theme: 'light', size: 'flexible', language: document.documentElement.lang, callback: (value: string) => { token = value; if (status.textContent === form.dataset.verify) status.textContent = ''; }, 'expired-callback': () => { token = ''; }, 'error-callback': () => { token = ''; status.textContent = form.dataset.verify!; } });
+  } catch { status.textContent = form.dataset.verify!; }
+  finally { rendering = false; }
+ };
+ document.querySelectorAll<HTMLButtonElement>('[data-open-contact]').forEach(button => button.addEventListener('click', () => {
+  if (!dialog.open) dialog.showModal();
+  if (button.dataset.contactSubject && !busy) form.elements.namedItem('subject') instanceof HTMLInputElement && ((form.elements.namedItem('subject') as HTMLInputElement).value = button.dataset.contactSubject);
+  renderVerification();
+ }));
+ dialog.querySelector('[data-close-contact]')?.addEventListener('click', () => dialog.close());
+ dialog.addEventListener('click', event => { if (event.target === dialog) { const r = dialog.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) dialog.close(); } });
+ dialog.addEventListener('close', () => { token = ''; if (widget !== undefined) { api()?.remove(widget); widget = undefined; } document.body.classList.remove('dialog-open'); });
+ document.querySelectorAll('[data-open-contact]').forEach(button => button.addEventListener('click', () => document.body.classList.add('dialog-open')));
+ dialog.querySelector('[data-new-inquiry]')?.addEventListener('click', () => { form.hidden = false; success.hidden = true; status.textContent = ''; renderVerification(); });
+ form.addEventListener('submit', async event => {
+  event.preventDefault(); if (busy || !form.reportValidity()) return;
+  if (!token) { status.textContent = form.dataset.verify!; return; }
+  busy = true; submit.disabled = true; submit.textContent = form.dataset.sending!; status.textContent = '';
+  const data = new FormData(form);
+  try {
+   const response = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: data.get('name'), email: data.get('email'), subject: data.get('subject'), message: data.get('message'), website: data.get('website'), consent: data.get('consent') === 'on', token, lang: document.documentElement.lang }), signal: AbortSignal.timeout(25000) });
+   const result = await response.json();
+   if (!response.ok || !result.ok) throw new Error(result.code === 'verification_failed' ? form.dataset.verify : result.code === 'invalid_input' ? form.dataset.invalid : form.dataset.error);
+   form.reset(); form.hidden = true; success.hidden = false;
+  } catch (error) { status.textContent = error instanceof Error && [form.dataset.verify, form.dataset.invalid].includes(error.message) ? error.message : form.dataset.error!; }
+  finally { token = ''; if (widget !== undefined) { api()?.remove(widget); widget = undefined; } busy = false; submit.disabled = !dialog.dataset.sitekey; submit.innerHTML = submitHtml; if (dialog.open && !form.hidden) renderVerification(); }
+ });
+</script>

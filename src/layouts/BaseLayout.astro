@@ -23,7 +23,7 @@ const {
   alternates = [],
 } = Astro.props as Props;
 
-const siteUrl = Astro.site ?? new URL("https://www.twms.in");
+const siteUrl = Astro.site ?? new URL("https://www.twms.ai");
 const canonicalUrl = new URL(canonical, siteUrl).toString();
 const socialImageUrl = new URL("/twms_logo_square.png", siteUrl).toString();
 const structuredData = {
@@ -36,9 +36,9 @@ const structuredData = {
       alternateName: "Tiny Wins Make Success",
       url: new URL("/", siteUrl).toString(),
       logo: socialImageUrl,
-      email: "info@twms.in",
+      email: "info@twms.ai",
       sameAs: [
-        "https://blog.twms.in/",
+        "https://blog.twms.ai/",
         "https://www.instagram.com/autogram.official/",
       ],
     },
@@ -90,13 +90,23 @@ const structuredData = {
     <link rel="manifest" href="/favicons/manifest.json" />
 
     <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LM605LPQZT"></script>
-    <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      window.gtag = function () { window.dataLayer.push(arguments); };
-      window.gtag('js', new Date());
-      window.gtag('config', 'G-LM605LPQZT');
-    </script>
+    {import.meta.env.PROD && <script is:inline>
+      (() => {
+        // A static production build may also run locally or on a preview URL.
+        // Do not even load Google's script outside the production domains.
+        if (location.protocol !== 'https:' || !['www.twms.ai', 'twms.ai'].includes(location.hostname)) return;
+        if (document.querySelector('script[data-twms-ga]')) return;
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () { window.dataLayer.push(arguments); };
+        window.gtag('js', new Date());
+        window.gtag('config', 'G-LM605LPQZT');
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-LM605LPQZT';
+        script.setAttribute('data-twms-ga', '');
+        document.head.append(script);
+      })();
+    </script>}
 
     <!-- Google AdSense -->
     <script
@@ -109,11 +119,11 @@ const structuredData = {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Audiowide&family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;550;600;650;700;750;800;850&family=Noto+Sans+KR:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
   </head>
-  <body class="min-h-screen bg-twms-background text-slate-900 antialiased">
+  <body id="top">
     <slot />
   </body>
 </html>
