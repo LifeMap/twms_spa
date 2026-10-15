@@ -16,7 +16,6 @@ const principles = [
  { no: '02', word: 'AUTOMATE.', ...t.features.automation },
  { no: '03', word: 'BUILD MOMENTUM.', ...t.features.smallWins },
 ];
-const upcoming = [t.services.marketing, t.services.angry, t.services.admin];
 const serviceCopy = {
  ko: { navigation: '서비스 바로가기', inquiry: '프로젝트 문의', focus: 'FOCUS', descriptions: ['에러페어와 항공 특가의 발견. 생각만 하던 여행을 더 가까이.', '흩어진 경험과 리뷰를 모아, 선택에 도움이 되는 정보를 살펴봅니다.', '여러 선택지 사이에서 나의 취향과 기준에 맞는 발견을 찾아갑니다.', '지식과 도구를 연결해, 일상의 작업을 함께하는 AI 어시스턴트.', '여러 AI 에이전트와 도구의 흐름을 조율하고, 아이디어를 실행으로 이어갑니다.'], features: [['에러페어 발견', '항공 특가', '여행 뉴스레터'], ['리뷰 탐색', '경험 공유', '선택의 근거'], ['취향 탐색', '선택지 비교', '나에게 맞는 발견'], ['AI 어시스턴트', '지식 연결', '작업 지원'], ['에이전트 조율', '도구 연결', '워크플로 설계']] },
  en: { navigation: 'Explore the services', inquiry: 'Ask about this project', focus: 'FOCUS', descriptions: ['Turn travel possibilities into a plan. Give your next journey a clearer direction.', 'Bring experiences and reviews together to inform your next choice.', 'Discover options that fit your preferences and what matters to you.', 'An AI assistant connecting knowledge and tools to support everyday work.', 'Coordinate AI agents and tools, turning connected workflows into action.'], features: [['Travel planning', 'Itineraries', 'Explore journeys'], ['Explore reviews', 'Shared experiences', 'Informed choices'], ['Explore preferences', 'Compare options', 'Find your fit'], ['AI assistant', 'Connected knowledge', 'Task support'], ['Agent coordination', 'Connected tools', 'Workflow design']] },
@@ -139,8 +138,6 @@ const hasPreview = (id: string) => previewServices.some(service => service === i
    </a>}
    </div>
   </article>)}
-  <div class="upcoming-heading"><h3>{c.next}</h3><span>ON THE HORIZON</span></div>
-  <div class="upcoming-grid">{upcoming.map((item, index) => <article class="upcoming-card"><div><span class="project-index">{String(index + projects.length + 2).padStart(2, '0')}</span><span class="planned-badge">{t.services.badges.planned}</span></div><h4>{item.title}</h4><p>{item.description}</p><span class="coming-soon">{item.cta}<span aria-hidden="true">↗</span></span></article>)}</div>
  </section>
  <section class="contact section-shell"><div class="contact-top"><span class="section-number">KEEP THE MOMENTUM GOING.</span><span aria-hidden="true">↗</span></div><h2>{c.contact}</h2><p>{c.contactBody}</p><button type="button" class="contact-link" data-open-contact data-analytics-event="contact_open" data-analytics-location="contact">info@twms.ai<span aria-hidden="true">↗</span></button></section>
 </main>
