@@ -274,7 +274,9 @@ button:focus-visible,a:focus-visible,summary:focus-visible { outline:3px solid #
  .principle h3 { font-size:23px; margin-top:16px; margin-bottom:18px; } .principle p { max-width:none; }
  .featured-product { grid-template-columns:1fr; border-radius:16px; } .product-art { min-height:370px; }
  .automation-diagram { max-width:280px; } .message-card { padding:18px; } .product-copy { padding:28px; }
- .product-copy h3 { margin-top:25px; font-size:42px; } .art-wordmark { font-size:48px; }
+ /* Keep service headings accessible without repeating the artwork title on mobile. */
+ .product-copy h3 { position:absolute; width:1px; height:1px; padding:0; margin:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+ .art-wordmark { font-size:48px; }
  .products { padding-bottom:60px; } .contact { padding:26px; } .contact-top > span:last-child { font-size:45px; }
  .contact h2 { font-size:29px; margin-top:24px; } .contact-link { font-size:20px; gap:30px; }
  .site-footer { flex-wrap:wrap; gap:16px; padding:28px 0; } .site-footer p { order:4; width:100%; margin-left:0; } .site-footer > a:nth-last-child(2) { margin-left:auto; }
