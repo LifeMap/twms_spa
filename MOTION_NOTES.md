@@ -53,5 +53,10 @@ the position. `stage-layout.js` is imported by the module player; layout tests
 cover portrait, landscape, iframe dimensions and viewport offsets.
 
 Parent/player messages are checked against the same origin and the expected
-window. No private repository text, keys, internal metrics or infrastructure
+window. Homepage buttons call the same-origin player API synchronously rather
+than sending asynchronous commands, preserving the click stack for mobile audio
+activation. Controls wait for player readiness, expose audio-pending/error states,
+and recover from rejected or timed-out audio activation. Audio interruption
+returns the sound button to a retryable muted state. Mobile touch targets are 44px.
+No private repository text, keys, internal metrics or infrastructure
 details are included in the public player.

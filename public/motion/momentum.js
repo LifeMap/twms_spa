@@ -1,4 +1,5 @@
 import { calculateStageLayout } from './stage-layout.js';
+import { resumeAudioContext } from './audio-activation.js';
 
 (() => {
  'use strict';
@@ -23,6 +24,7 @@ import { calculateStageLayout } from './stage-layout.js';
  let paused = reduced.matches, muted = true, position = reduced.matches ? starts[finalScene] + beat * 4 : 0, last = performance.now(), active = -1, notifyAt = 0;
  const musicLevel = .85;
  let audio, master, mix, echo, noiseBuffer, musicTimer, lastBeat = -1;
+ let audioPending = false, audioError = '', soundRequest = 0;
  const wave = document.querySelector('#waveform');
  for (let i = 0; i < 45; i++) wave.append(document.createElement('i'));
  const waveBars = [...wave.children], strip = document.querySelector('#beat-strip');
@@ -118,10 +120,16 @@ import { calculateStageLayout } from './stage-layout.js';
   document.querySelector('#timecode').textContent = `00:${String(Math.floor(position)).padStart(2, '0')} / 00:${duration}`;
   document.querySelector('#scrub').value = String(position);
   document.querySelector('#play').textContent = paused ? '▶' : 'Ⅱ'; document.querySelector('#play').setAttribute('aria-label', paused ? '재생' : '일시 정지');
-  document.querySelector('#sound').textContent = muted ? '소리 켜기 ♪' : '소리 끄기 ♫'; document.querySelector('#sound').setAttribute('aria-pressed', String(!muted));
+  const soundButton = document.querySelector('#sound');
+  soundButton.textContent = audioPending ? '소리 준비 중…' : muted ? '소리 켜기 ♪' : '소리 끄기 ♫';
+  soundButton.setAttribute('aria-pressed', String(!muted));
+  soundButton.setAttribute('aria-busy', String(audioPending)); soundButton.disabled = audioPending;
+  const audioStatus = document.querySelector('#audio-status');
+  audioStatus.textContent = audioError ? (params.get('lang') === 'en' ? 'Audio is unavailable. Tap sound again to retry.' : params.get('lang') === 'ja' ? '音声を開始できません。音声ボタンで再試行してください。' : '소리를 재생하지 못했습니다. 소리 버튼을 다시 눌러주세요.') : '';
   paint(safeIndex, position, phase);
  }
- function notify() { if (parent !== window) parent.postMessage({ type: 'twms-motion-state', paused, muted, currentTime: position, duration }, location.origin); }
+ const getState = () => ({ paused, muted, audioPending, audioError, currentTime: position, duration, scene: names[active] });
+ function notify() { if (parent !== window) parent.postMessage({ type: 'twms-motion-state', ...getState() }, location.origin); }
  function tone(frequency, start, length, volume, type = 'sine', end = frequency, cutoff = 0, wet = false) {
   const oscillator = audio.createOscillator(), gain = audio.createGain(); oscillator.type = type;
   oscillator.frequency.setValueAtTime(frequency, start); oscillator.frequency.exponentialRampToValueAtTime(Math.max(20, end), start + length);
@@ -162,8 +170,19 @@ import { calculateStageLayout } from './stage-layout.js';
   }
  }
  async function soundOn() {
+  if (audioPending) return;
+  const request = ++soundRequest;
+  audioPending = true; audioError = '';
   try {
    audio ??= new AudioContext();
+   if (!audio.onstatechange) audio.onstatechange = () => {
+    if (audio.state === 'running' || muted || audioPending) return;
+    // iOS may interrupt audio after backgrounding or a phone call. Do not keep
+    // displaying an audible icon while the context cannot actually play.
+    muted = true; audioError = 'audio_interrupted';
+    master?.gain.setTargetAtTime(0, audio.currentTime, .025);
+    render(); notify();
+   };
    if (!master) {
     master = audio.createGain(); master.gain.value = 0; mix = audio.createGain();
     const compressor = audio.createDynamicsCompressor(); compressor.threshold.value = -15; compressor.knee.value = 12; compressor.ratio.value = 5; compressor.attack.value = .003; compressor.release.value = .16;
@@ -175,15 +194,22 @@ import { calculateStageLayout } from './stage-layout.js';
     const samples = noiseBuffer.getChannelData(0); let seed = 1701;
     for (let i = 0; i < samples.length; i++) { seed = (seed * 16807) % 2147483647; samples[i] = seed / 1073741824 - 1; }
    }
-   await audio.resume();
-   if (audio.state !== 'running') return;
+   const resumed = resumeAudioContext(audio);
+   render(); notify();
+   await resumed;
+   if (request !== soundRequest) return;
+   if (document.hidden) throw new Error('audio_hidden');
    muted = false; master.gain.setTargetAtTime(paused ? 0 : musicLevel, audio.currentTime, .08);
+   lastBeat = -1;
    if (!musicTimer) musicTimer = setInterval(() => { if (muted || paused || document.hidden) return; const index = Math.floor(position / beat); if (lastBeat !== index) { lastBeat = index; playBeat(index); } }, 20);
-  } catch { muted = true; }
-  render(); notify();
+  } catch {
+   if (request === soundRequest) { muted = true; audioError = 'audio_unavailable'; master?.gain.setTargetAtTime(0, audio.currentTime, .025); }
+  } finally {
+   if (request === soundRequest) { audioPending = false; render(); notify(); }
+  }
  }
- function setPaused(value) { paused = value; last = performance.now(); lastBeat = -1; if (audio && master) master.gain.setTargetAtTime(paused || muted ? 0 : musicLevel, audio.currentTime, .025); render(); notify(); }
- function setMuted(value) { if (!value) return soundOn(); muted = true; if (master) master.gain.setTargetAtTime(0, audio.currentTime, .025); render(); notify(); }
+ function setPaused(value) { paused = value; last = performance.now(); lastBeat = -1; if (audio && master) master.gain.setTargetAtTime(paused || muted ? 0 : musicLevel, audio.currentTime, .025); render(); notify(); if (!paused && !muted && audio?.state !== 'running') return soundOn(); }
+ function setMuted(value) { if (!value) return soundOn(); ++soundRequest; muted = true; audioPending = false; audioError = ''; if (master) master.gain.setTargetAtTime(0, audio.currentTime, .025); render(); notify(); }
  function seek(value) { position = Math.max(0, Math.min(duration - .001, Number(value) || 0)); last = performance.now(); lastBeat = -1; render(); notify(); }
  document.querySelector('#play').onclick = () => setPaused(!paused);
  document.querySelector('#sound').onclick = () => setMuted(!muted);
@@ -198,7 +224,10 @@ import { calculateStageLayout } from './stage-layout.js';
  });
  reduced.addEventListener('change', () => { if (reduced.matches) setPaused(true); });
  document.addEventListener('visibilitychange', () => { last = performance.now(); if (master) master.gain.setTargetAtTime(document.hidden || muted || paused ? 0 : musicLevel, audio.currentTime, .03); });
- window.twmsMotion = { seek, pause: () => setPaused(true), play: () => setPaused(false), getState: () => ({ paused, muted, currentTime: position, duration, scene: names[active] }) };
+ // Same-origin parents invoke this API synchronously from their click handler,
+ // preserving the user gesture needed by mobile Web Audio. Messages still carry
+ // periodic state updates, but are no longer required for button commands.
+ window.twmsMotion = { seek, pause: () => setPaused(true), play: () => setPaused(false), setMuted, getState };
  function tick(now) { const delta = Math.min((now - last) / 1000, .1); last = now; if (!paused && !document.hidden) { position = (position + delta) % duration; render(); } if (now - notifyAt > 200) { notify(); notifyAt = now; } requestAnimationFrame(tick); }
  render(); notify(); requestAnimationFrame(tick);
 })();

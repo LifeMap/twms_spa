@@ -3,6 +3,7 @@ import type { Lang } from '../i18n';
 import ContactForm from './ContactForm.astro';
 import ServicePreview from './ServicePreview.astro';
 import { useTranslations, languages, getLocalizedPath } from '../i18n';
+import { withHomepageUtm } from '../utils/campaign-url.js';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
@@ -39,6 +40,11 @@ const visitService = { ko: '서비스 바로가기', en: 'Visit service', ja: '�
 const previewLabel = { ko: '화면 미리보기', en: 'Preview screens', ja: '画面プレビュー' }[lang];
 const previewServices = ['jarvis', 'orch-ai', 'twms-studio'] as const;
 const hasPreview = (id: string) => previewServices.some(service => service === id);
+const filmMessages = {
+ ko: { audio: '소리를 시작하지 못했습니다. 소리 버튼을 다시 눌러주세요.', unavailable: '모션을 불러오지 못했습니다. 페이지를 새로고침해 주세요.' },
+ en: { audio: 'Audio could not start. Tap the sound button to retry.', unavailable: 'The motion player could not load. Please refresh the page.' },
+ ja: { audio: '音声を開始できません。音声ボタンで再試行してください。', unavailable: 'モーションを読み込めませんでした。ページを再読み込みしてください。' },
+}[lang];
 ---
 
 <a class="skip-link" href="#about">{c.skip}</a>
@@ -47,7 +53,7 @@ const hasPreview = (id: string) => previewServices.some(service => service === i
   <a class="wordmark" href={getLocalizedPath('/', lang)} aria-label="TWMS — Tiny Wins Make Success">TWMS<span class="brand-dot"></span></a>
   <nav aria-label={t.nav.about}>
    <a href="#about">{t.nav.about}</a><a href="#features">{t.nav.features}</a><a href="#services">{t.nav.services}</a>
-   <a href="https://blog.twms.ai/" target="_blank" rel="noopener noreferrer" data-analytics-event="blog_click" data-analytics-location="header">{t.nav.blog} ↗</a>
+   <a href={withHomepageUtm('https://blog.twms.ai/', 'header', lang)} target="_blank" rel="noopener noreferrer" data-analytics-event="blog_click" data-analytics-location="header">{t.nav.blog} ↗</a>
   </nav>
   <details class="language-picker">
    <summary aria-label="Select language"><span aria-hidden="true">◎</span> {lang.toUpperCase()} <span aria-hidden="true">⌄</span></summary>
@@ -62,16 +68,17 @@ const hasPreview = (id: string) => previewServices.some(service => service === i
    <div class="film-controls">
     <span class="film-caption"><span class="status-dot"></span> MOMENTUM / 00:19.5</span>
     <div class="film-buttons">
-     <button type="button" class="sound-button" data-sound data-on={c.sound} data-off={c.mute} aria-label={c.sound} title={c.sound} aria-pressed="false">
+     <button type="button" class="sound-button" data-sound data-on={c.sound} data-off={c.mute} aria-label={c.sound} title={c.sound} aria-pressed="false" disabled>
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
        <path d="M11 5 6 9H3v6h3l5 4V5Z" />
        <g class="sound-muted"><path d="m16 9 6 6m0-6-6 6" /></g>
        <g class="sound-audible"><path d="M15 8a6 6 0 0 1 0 8M18 5a10 10 0 0 1 0 14" /></g>
       </svg>
      </button>
-     <button type="button" data-play data-play-label={c.play} data-pause-label={c.pause} aria-label={c.pause}><span data-play-icon aria-hidden="true">Ⅱ</span></button>
+     <button type="button" data-play data-play-label={c.play} data-pause-label={c.pause} aria-label={c.pause} disabled><span data-play-icon aria-hidden="true">Ⅱ</span></button>
     </div>
    </div>
+   <p class="film-status" data-film-status data-audio-error={filmMessages.audio} data-unavailable={filmMessages.unavailable} role="status" aria-live="polite" hidden></p>
    <div class="film-progress" aria-hidden="true"><span data-progress></span></div>
   </div>
   <div class="film-bottom"><span>Tiny Wins. Make Success.</span><a href="#about">{c.scroll}<span aria-hidden="true">↓</span></a></div>
@@ -106,7 +113,7 @@ const hasPreview = (id: string) => previewServices.some(service => service === i
     </div>
     <span class="art-wordmark">Autogram<span>↗</span></span>
    </div>
-   <div class="product-copy"><div class="product-meta"><span>01 / SOCIAL AUTOMATION</span><span class="badge"><span class="status-dot"></span>{t.services.badges.beta}</span></div><h3>{t.services.autogram.title}</h3><p>{t.services.autogram.description}</p><a class="button-primary" href="https://autogram.twms.ai/" target="_blank" rel="noopener noreferrer" data-analytics-event="autogram_cta_click" data-analytics-location="services">{visitService}<span aria-hidden="true">↗</span></a><a class="instagram-link" href="https://www.instagram.com/autogram.official/" target="_blank" rel="noopener noreferrer" aria-label="Autogram Instagram — @autogram.official" title="@autogram.official">
+   <div class="product-copy"><div class="product-meta"><span>01 / SOCIAL AUTOMATION</span><span class="badge"><span class="status-dot"></span>{t.services.badges.beta}</span></div><h3>{t.services.autogram.title}</h3><p>{t.services.autogram.description}</p><a class="button-primary" href={withHomepageUtm('https://autogram.twms.ai/', 'autogram_card', lang)} target="_blank" rel="noopener noreferrer" data-analytics-event="autogram_cta_click" data-analytics-location="services">{visitService}<span aria-hidden="true">↗</span></a><a class="instagram-link" href="https://www.instagram.com/autogram.official/" target="_blank" rel="noopener noreferrer" aria-label="Autogram Instagram — @autogram.official" title="@autogram.official">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
    </a></div>
   </article>
@@ -131,7 +138,7 @@ const hasPreview = (id: string) => previewServices.some(service => service === i
    </div>
    <div class="product-copy"><div class="product-meta"><span>{project.no} / {project.category}</span></div><h3>{project.name}</h3><p>{projectDescriptions[index]}</p><ul class="project-focus" aria-label={serviceCopy.focus}>{projectFeatures[index].map(feature => <li>{feature}</li>)}</ul><div class="project-actions">
     {hasPreview(project.id) && <button type="button" class="button-primary" data-open-preview={`preview-${project.id}`} aria-haspopup="dialog" aria-controls={`preview-${project.id}`} data-analytics-event="service_preview_open" data-analytics-location={project.id}>{previewLabel}<span aria-hidden="true">⊞</span></button>}
-    {projectUrls[project.id] ? <a class="button-primary" href={projectUrls[project.id]} target="_blank" rel="noopener noreferrer" data-analytics-event="service_click" data-analytics-location={project.id}>{visitService}<span aria-hidden="true">↗</span></a> : <button type="button" class:list={['button-primary', { 'button-outline': hasPreview(project.id) }]} data-open-contact data-contact-subject={project.name} data-analytics-event="contact_open" data-analytics-location={project.id}>{serviceCopy.inquiry}<span aria-hidden="true">↗</span></button>}
+    {projectUrls[project.id] ? <a class="button-primary" href={withHomepageUtm(projectUrls[project.id], `${project.id}_card`, lang)} target="_blank" rel="noopener noreferrer" data-analytics-event="service_click" data-analytics-location={project.id}>{visitService}<span aria-hidden="true">↗</span></a> : <button type="button" class:list={['button-primary', { 'button-outline': hasPreview(project.id) }]} data-open-contact data-contact-subject={project.name} data-analytics-event="contact_open" data-analytics-location={project.id}>{serviceCopy.inquiry}<span aria-hidden="true">↗</span></button>}
    </div>
    {project.id === 'twms-studio' && <a class="instagram-link" href="https://www.instagram.com/nori_hini/" target="_blank" rel="noopener noreferrer" aria-label="TWMS Studio Instagram — @nori_hini" title="@nori_hini" data-analytics-event="instagram_click" data-analytics-location="twms-studio">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
@@ -141,11 +148,12 @@ const hasPreview = (id: string) => previewServices.some(service => service === i
  </section>
  <section class="contact section-shell"><div class="contact-top"><span class="section-number">KEEP THE MOMENTUM GOING.</span><span aria-hidden="true">↗</span></div><h2>{c.contact}</h2><p>{c.contactBody}</p><button type="button" class="contact-link" data-open-contact data-analytics-event="contact_open" data-analytics-location="contact">info@twms.ai<span aria-hidden="true">↗</span></button></section>
 </main>
-<footer class="site-footer section-shell"><a class="wordmark" href={getLocalizedPath('/', lang)}>TWMS<span class="brand-dot"></span></a><p>{t.footer.copyright.replace('{year}', String(new Date().getFullYear()))}</p><a href="https://blog.twms.ai/" target="_blank" rel="noopener noreferrer" data-analytics-event="blog_click" data-analytics-location="footer">{t.nav.blog} ↗</a><a href="#top" aria-label="Back to top">↑</a></footer>
+<footer class="site-footer section-shell"><a class="wordmark" href={getLocalizedPath('/', lang)}>TWMS<span class="brand-dot"></span></a><p>{t.footer.copyright.replace('{year}', String(new Date().getFullYear()))}</p><a href={withHomepageUtm('https://blog.twms.ai/', 'footer', lang)} target="_blank" rel="noopener noreferrer" data-analytics-event="blog_click" data-analytics-location="footer">{t.nav.blog} ↗</a><a href="#top" aria-label="Back to top">↑</a></footer>
 <ContactForm lang={lang} />
 {previewServices.map(service => <ServicePreview lang={lang} service={service} />)}
 
 <script>
+ import { bindMotionControls } from '../utils/motion-controls.js';
  const header = document.querySelector<HTMLElement>('[data-header]');
  const updateHeader = () => header?.classList.toggle('is-floating', window.scrollY > 60);
  window.addEventListener('scroll', updateHeader, { passive: true });
@@ -158,26 +166,7 @@ const hasPreview = (id: string) => previewServices.some(service => service === i
  const play = document.querySelector<HTMLButtonElement>('[data-play]');
  const progress = document.querySelector<HTMLElement>('[data-progress]');
  if (film && sound && play) {
-  let filmPaused = false, filmMuted = true;
-  const command = (value: string) => film.contentWindow?.postMessage({ type: 'twms-motion-command', command: value }, window.location.origin);
-  const updateControls = () => {
-   const label = filmMuted ? sound.dataset.on! : sound.dataset.off!;
-   sound.setAttribute('aria-label', label);
-   sound.setAttribute('aria-pressed', String(!filmMuted));
-   sound.title = label;
-   play.setAttribute('aria-label', filmPaused ? play.dataset.playLabel! : play.dataset.pauseLabel!);
-   play.querySelector('[data-play-icon]')!.textContent = filmPaused ? '▶' : 'Ⅱ';
-  };
-  sound.addEventListener('click', () => command('toggleMute'));
-  play.addEventListener('click', () => command('togglePlay'));
-  film.addEventListener('load', () => command('state'));
-  window.addEventListener('message', event => {
-   if (event.origin !== window.location.origin || event.source !== film.contentWindow || event.data?.type !== 'twms-motion-state') return;
-   filmPaused = Boolean(event.data.paused); filmMuted = Boolean(event.data.muted);
-   if (progress && event.data.duration > 0) progress.style.width = `${Math.max(0, Math.min(100, event.data.currentTime / event.data.duration * 100))}%`;
-   updateControls();
-  });
-  updateControls();
+  bindMotionControls({ film, sound, play, progress, status: document.querySelector<HTMLElement>('[data-film-status]') });
  }
  document.addEventListener('click', event => {
   if (!(event.target instanceof Element)) return;
