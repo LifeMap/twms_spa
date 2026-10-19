@@ -21,7 +21,8 @@ function harness(ready = true) {
  const play = new Element({ playLabel: 'play', pauseLabel: 'pause' });
  const status = new Element({ unavailable: 'load failed', audioError: 'retry audio' }), progress = new Element();
  const host = new EventTarget(); host.location = { origin: 'https://www.twms.ai' };
- film.contentWindow = { twmsMotion: ready ? player : null };
+ film.src = 'https://www.twms.ai/motion/twms-momentum.html?embedded=1';
+ film.contentWindow = { twmsMotion: ready ? player : null, postMessage() {} };
  const update = (data = { type: 'twms-motion-state' }, origin = host.location.origin) => {
   const event = new Event('message'); Object.assign(event, { data, origin, source: film.contentWindow }); host.dispatchEvent(event);
  };
@@ -65,7 +66,7 @@ test('pending audio does not block pause and failures restore a retryable mute b
 test('untrusted messages are ignored and failed frame loads disable controls', () => {
  const h = harness(); h.state.audioPending = true;
  h.update({ type: 'twms-motion-state' }, 'https://evil.example'); assert.equal(h.sound.disabled, false);
- h.film.contentWindow.twmsMotion = null; h.film.dispatchEvent(new Event('load'));
+ h.film.contentWindow.twmsMotion = null; h.film.dispatchEvent(new Event('error'));
  assert.equal(h.play.disabled, true); assert.equal(h.status.textContent, 'load failed');
 });
 

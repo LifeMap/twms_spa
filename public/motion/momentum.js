@@ -1,5 +1,6 @@
 import { calculateStageLayout } from './stage-layout.js';
 import { resumeAudioContext } from './audio-activation.js';
+import { bindMotionMessageBridge } from './embed-bridge.js';
 
 (() => {
  'use strict';
@@ -125,11 +126,15 @@ import { resumeAudioContext } from './audio-activation.js';
   soundButton.setAttribute('aria-pressed', String(!muted));
   soundButton.setAttribute('aria-busy', String(audioPending)); soundButton.disabled = audioPending;
   const audioStatus = document.querySelector('#audio-status');
+  // Some mobile browsers require a gesture inside the cross-origin frame.
+  // Keep external controls primary, but expose an in-frame retry on failure.
+  document.body.classList.toggle('audio-gesture-required', embedded && Boolean(audioError));
   audioStatus.textContent = audioError ? (params.get('lang') === 'en' ? 'Audio is unavailable. Tap sound again to retry.' : params.get('lang') === 'ja' ? '音声を開始できません。音声ボタンで再試行してください。' : '소리를 재생하지 못했습니다. 소리 버튼을 다시 눌러주세요.') : '';
   paint(safeIndex, position, phase);
  }
  const getState = () => ({ paused, muted, audioPending, audioError, currentTime: position, duration, scene: names[active] });
- function notify() { if (parent !== window) parent.postMessage({ type: 'twms-motion-state', ...getState() }, location.origin); }
+ let messageBridge;
+ function notify() { messageBridge?.notify(); }
  function tone(frequency, start, length, volume, type = 'sine', end = frequency, cutoff = 0, wet = false) {
   const oscillator = audio.createOscillator(), gain = audio.createGain(); oscillator.type = type;
   oscillator.frequency.setValueAtTime(frequency, start); oscillator.frequency.exponentialRampToValueAtTime(Math.max(20, end), start + length);
@@ -215,19 +220,13 @@ import { resumeAudioContext } from './audio-activation.js';
  document.querySelector('#sound').onclick = () => setMuted(!muted);
  document.querySelector('#restart').onclick = () => { seek(0); setPaused(false); };
  document.querySelector('#scrub').oninput = event => seek(event.target.value);
- addEventListener('message', event => {
-  if (event.origin !== location.origin || event.source !== parent || event.data?.type !== 'twms-motion-command') return;
-  if (event.data.command === 'togglePlay') setPaused(!paused);
-  if (event.data.command === 'toggleMute') setMuted(!muted);
-  if (event.data.command === 'seek') seek(event.data.time);
-  if (event.data.command === 'state') notify();
- });
  reduced.addEventListener('change', () => { if (reduced.matches) setPaused(true); });
  document.addEventListener('visibilitychange', () => { last = performance.now(); if (master) master.gain.setTargetAtTime(document.hidden || muted || paused ? 0 : musicLevel, audio.currentTime, .03); });
  // Same-origin parents invoke this API synchronously from their click handler,
  // preserving the user gesture needed by mobile Web Audio. Messages still carry
  // periodic state updates, but are no longer required for button commands.
  window.twmsMotion = { seek, pause: () => setPaused(true), play: () => setPaused(false), setMuted, getState };
+ messageBridge = bindMotionMessageBridge({ player: window.twmsMotion });
  function tick(now) { const delta = Math.min((now - last) / 1000, .1); last = now; if (!paused && !document.hidden) { position = (position + delta) % duration; render(); } if (now - notifyAt > 200) { notify(); notifyAt = now; } requestAnimationFrame(tick); }
  render(); notify(); requestAnimationFrame(tick);
 })();

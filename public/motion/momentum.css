@@ -4,6 +4,9 @@ html body{display:block;position:relative}
 body .stage{color:var(--fg);position:fixed;left:0;top:0;transform-origin:0 0}
 .audio-status{position:fixed;left:12px;right:12px;bottom:100px;z-index:30;text-align:center;color:#eff8e1;font:12px/1.6 sans-serif;pointer-events:none}
 .embedded .audio-status{display:none}
+.embedded.audio-gesture-required .player-controls{display:flex;width:auto}
+.embedded.audio-gesture-required .player-controls>:not(#sound){display:none}
+.embedded.audio-gesture-required .audio-status{display:block}
 .player-controls button:disabled{opacity:.55;cursor:wait}
 body .player-controls button{min-width:44px;min-height:44px;touch-action:manipulation}
 .scene-art{will-change:transform}

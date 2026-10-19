@@ -52,11 +52,62 @@ Resize, orientation, visual-viewport changes and page restoration recalculate
 the position. `stage-layout.js` is imported by the module player; layout tests
 cover portrait, landscape, iframe dimensions and viewport offsets.
 
-Parent/player messages are checked against the same origin and the expected
-window. Homepage buttons call the same-origin player API synchronously rather
+Parent/player messages are checked against the expected window and either the
+exact same origin or HTTPS `twms.ai` / `*.twms.ai` (default HTTPS port only).
+Lookalike domains, HTTP cross-origin hosts, opaque origins, and unrelated windows
+are rejected. State replies use the verified parent's exact origin, never `*`.
+A `state` handshake works even with `Referrer-Policy: no-referrer`.
+Homepage buttons call the same-origin player API synchronously rather
 than sending asynchronous commands, preserving the click stack for mobile audio
 activation. Controls wait for player readiness, expose audio-pending/error states,
 and recover from rejected or timed-out audio activation. Audio interruption
 returns the sound button to a retryable muted state. Mobile touch targets are 44px.
 No private repository text, keys, internal metrics or infrastructure
 details are included in the public player.
+
+## External TWMS sites
+
+Deploy this player update first, then replace direct `iframe.contentWindow.twmsMotion`
+access in each external site's button wiring with the shared controller below.
+Keep the existing button styling/icons. Do not bind both old and new handlers.
+The module and its public helper allow anonymous CORS reads via `vercel.json`;
+this does not broaden which origins may control a frame. No credentials are used.
+
+```html
+<iframe id="brand-film"
+ src="https://www.twms.ai/motion/twms-momentum.html?embedded=1&lang=ko"
+ title="TWMS motion" allow="autoplay"
+ style="width:100%;aspect-ratio:16/9;border:0"></iframe>
+<button id="motion-sound" disabled data-on="소리 켜기" data-off="소리 끄기"
+ aria-label="소리 켜기" aria-pressed="false">소리</button>
+<button id="motion-play" disabled data-play-label="재생" data-pause-label="일시 정지"
+ aria-label="일시 정지"><span data-play-icon>Ⅱ</span></button>
+<p id="motion-status" role="status" aria-live="polite" hidden
+ data-unavailable="모션그래픽을 불러오지 못했습니다."
+ data-audio-error="소리를 시작하지 못했습니다. 영상 안의 소리 버튼을 눌러주세요."></p>
+<script type="module">
+ import { bindMotionControls } from 'https://www.twms.ai/motion/motion-controls.js';
+ bindMotionControls({
+  film: document.querySelector('#brand-film'),
+  sound: document.querySelector('#motion-sound'),
+  play: document.querySelector('#motion-play'),
+  progress: null,
+  status: document.querySelector('#motion-status'),
+ });
+</script>
+```
+
+For custom integrations, send `{ type: 'twms-motion-command', command }` to the
+iframe with target origin `https://www.twms.ai`. Commands: `state`, `togglePlay`,
+`toggleMute`, `seek` (`time`: finite number), `setPaused` (`paused`: boolean),
+`setMuted` (`muted`: boolean). Listen for `twms-motion-state` only from that exact
+origin AND the iframe's `contentWindow`. Toggle commands execute against live
+player state, so rapid clicks do not rely on stale parent-side state.
+
+Cross-origin embeds need `allow="autoplay"`; an ancestor Permissions-Policy must
+not forbid autoplay. If sandboxing is required, retain `allow-scripts` and
+`allow-same-origin`. A sandboxed opaque-origin frame cannot use this bridge.
+Some mobile browsers still require the first audio gesture inside the iframe;
+messages cannot bypass that restriction. On audio failure, the embedded player
+exposes a small in-frame sound retry button; external play/mute controls remain.
+The existing same-origin homepage retains synchronous audio activation.

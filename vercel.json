@@ -1,0 +1,12 @@
+{
+ "headers": [
+  {
+   "source": "/motion/motion-controls.js",
+   "headers": [{ "key": "Access-Control-Allow-Origin", "value": "*" }]
+  },
+  {
+   "source": "/motion/embed-bridge.js",
+   "headers": [{ "key": "Access-Control-Allow-Origin", "value": "*" }]
+  }
+ ]
+}
