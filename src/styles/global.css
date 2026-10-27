@@ -78,9 +78,10 @@ button:focus-visible,a:focus-visible,summary:focus-visible { outline:3px solid #
 .film-bottom a { display:flex; gap:20px; align-items:center; font-family:"Inter","Noto Sans KR",sans-serif; letter-spacing:0; }
 .film-bottom a span { font-size:18px; }
 .section-shell { width:min(100% - 112px,1400px); margin:auto; }
-.home-ad { margin-top:28px; }
-.home-ad span { display:block; margin-bottom:8px; font:10px ui-monospace,monospace; letter-spacing:.1em; opacity:.55; }
-.home-ad .adsbygoogle { min-height:90px; }
+.home-ad { margin:0 auto 72px; }
+.home-ad-label { display:block; margin-bottom:10px; font:10px ui-monospace,monospace; letter-spacing:.12em; color:#61725b; }
+.home-ad .adsbygoogle { display:block !important; width:100% !important; min-height:90px; text-align:center; }
+.home-ad .adsbygoogle iframe { max-width:100%; margin-inline:auto; }
 .intro { padding-top:110px; }
 .eyebrow { display:flex; justify-content:space-between; align-items:center; margin-bottom:42px; }
 .section-number,.small-label { font:10px ui-monospace,monospace; letter-spacing:.1em; }
